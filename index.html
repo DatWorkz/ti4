@@ -16,7 +16,7 @@
   --s1:#ef5a5f;--s2:#f2914a;--s3:#ebcb4f;--s4:#55be7b;--s5:#36c5b8;--s6:#58a6ee;--s7:#8a93f7;--s8:#b884f2;
   --display:"Unbounded",system-ui,sans-serif;
   --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --nav-h:64px;
+  --nav-h:64px;--gut:20px;
   color-scheme:dark;
 }
 @media (prefers-color-scheme:light){
@@ -32,110 +32,70 @@ html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 body{margin:0;min-height:100dvh;background:var(--ink);color:var(--text);font:400 16px/1.6 var(--body)}
 h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
 h2{font-size:clamp(23px,5vw,30px);margin:28px 0 12px;scroll-margin-top:24px}
+h3{font-size:18px;margin:24px 0 8px;scroll-margin-top:84px}
 p{margin:0 0 14px;max-width:62ch}
+ul,ol{max-width:62ch}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--glow);outline-offset:2px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
 .brand{display:flex;align-items:center;gap:12px;padding:18px 20px 4px}
 .brand svg{flex:none;width:34px;height:34px;color:var(--glow)}
 .brand h1{margin:0;font-size:16px;letter-spacing:0}
 .brand small{display:block;color:var(--mute);font-size:13px;line-height:1.3}
 
-.tabs{position:fixed;z-index:10;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);padding:0 4px env(safe-area-inset-bottom);background:var(--deck);border-top:1px solid var(--line)}
+.tabs{position:fixed;z-index:10;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);padding:0 4px env(safe-area-inset-bottom);background:var(--deck);border-top:1px solid var(--line)}
 .tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:var(--nav-h);padding:6px 0;border:0;background:none;color:var(--mute);font-size:12px;font-weight:500}
 .tabs svg{width:24px;height:24px;padding:4px 16px;box-sizing:content-box;border-radius:99px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:background-color .2s}
 .tabs [aria-current]{color:var(--text)}
 .tabs [aria-current] svg{background:color-mix(in srgb,var(--glow) 24%,transparent)}
 
-main{max-width:46rem;padding:0 20px calc(var(--nav-h) + 40px + env(safe-area-inset-bottom))}
+main{max-width:46rem;padding:0 var(--gut) calc(var(--nav-h) + 40px + env(safe-area-inset-bottom))}
 .lead{font-size:17px}
 .note{border-left:3px solid var(--line);padding:2px 0 2px 14px;color:var(--mute);font-size:15px}
+.hint{color:var(--mute);font-size:14px;margin:0}
 .btn{min-height:44px;padding:0 18px;border:1px solid var(--line);border-radius:10px;background:var(--raise);font-weight:600;font-size:15px}
 .btn.primary{background:var(--glow);border-color:transparent;color:var(--on-glow)}
 .btn:disabled{opacity:.4;cursor:default}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.big{width:100%;min-height:56px;font-size:17px}
 footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--mute);font-size:13px}
 
-/* home: the victory track, laid out as interlocking hexes */
-.hero{font-size:clamp(25px,6.2vw,40px);line-height:1.15;margin:28px 0 22px;max-width:17ch}
-.track{--w:calc((100% - 20px) / 8.5);display:flex;max-width:540px;padding-bottom:calc(var(--w) * .433);margin-bottom:14px}
-.track button{flex:none;width:var(--w);aspect-ratio:1.1547;padding:0;border:0;background:var(--raise);color:var(--mute);font:600 clamp(12px,2.8vw,17px)/1 var(--display);clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);transition:background-color .15s,color .15s}
-.track button+button{margin-left:calc(var(--w) * -.25 + 2px)}
-.track button:nth-child(even){transform:translateY(50%)}
-.track .goal{background:color-mix(in srgb,var(--glow) 30%,var(--raise));color:var(--text)}
-.track .on{background:var(--glow);color:var(--on-glow)}
-.track button:focus-visible{outline:0;background:var(--text);color:var(--ink)}
-.track-note{color:var(--mute);min-height:1.6em}
-.next{list-style:none;padding:0;margin:0}
-.next button{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 16px;width:100%;padding:16px 4px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left}
-.next li:first-child button{border-top:1px solid var(--line)}
-.next b{font:600 17px/1.3 var(--display)}
-.next span{grid-column:1;color:var(--mute)}
-.next button::after,.action summary::after,.qa summary::after{content:"";grid-column:2;grid-row:1/3;width:9px;height:9px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(-45deg);transition:transform .2s}
+/* home */
+.hero{font-size:clamp(27px,6.6vw,42px);line-height:1.15;margin:28px 0 12px;max-width:16ch}
+.choices{display:flex;flex-direction:column;gap:12px;margin:24px 0 8px}
+.choice{display:grid;gap:4px;width:100%;padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--deck);text-align:left}
+.choice b{font:600 19px/1.25 var(--display)}
+.choice span{color:var(--mute)}
+.choice.primary{border:2px solid var(--glow);order:-1}
+.minute{padding-left:0;list-style:none;counter-reset:m}
+.minute li{counter-increment:m;display:grid;grid-template-columns:28px 1fr;gap:12px;padding:8px 0}
+.minute li::before{content:counter(m);width:28px;height:28px;border-radius:50%;background:var(--raise);font:600 13px/28px var(--display);text-align:center}
 
-/* turn: actions and strategy cards */
-.action,.qa{border-bottom:1px solid var(--line)}
-.action:first-of-type,.qa:first-of-type{border-top:1px solid var(--line)}
-.action summary,.qa summary{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 16px;padding:16px 4px;list-style:none;cursor:pointer}
-summary::-webkit-details-marker{display:none}
-.action summary::after,.qa summary::after{transform:rotate(45deg)}
-.action[open] summary::after,.qa[open] summary::after{transform:rotate(-135deg)}
-.action b{font:600 18px/1.3 var(--display)}
-.action summary span{grid-column:1;color:var(--mute)}
-.qa summary b{font-weight:600;font-size:17px}
-.action>div,.qa>p{padding:0 4px 20px}
-.steps{list-style:none;counter-reset:s;padding:0;margin:0 0 12px}
-.steps li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:12px;padding:6px 0}
-.steps li::before{content:counter(s);width:28px;height:28px;border-radius:50%;background:var(--raise);font:600 13px/28px var(--display);text-align:center}
-.strats{list-style:none;padding:0;margin:8px 0 0}
-.strat{display:grid;grid-template-columns:52px 1fr;align-content:start;column-gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
-.strat .init{grid-row:1/3;font:700 40px/1 var(--display);color:var(--c)}
-.strat h3{margin:2px 0 2px;font-size:17px}
-.strat p{margin:0;color:var(--mute)}
-
-/* round: timeline of phases */
-.round-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
-.round-bar span{color:var(--mute)}
-.timeline,.timeline ol{list-style:none;padding:0;margin:0}
-.timeline{position:relative;margin:20px 0 24px;padding-left:48px}
-.timeline::before{content:"";position:absolute;left:15px;top:20px;bottom:20px;width:2px;background:var(--line)}
-.timeline>li{position:relative}
-.timeline>li:last-child::after{content:"";position:absolute;left:-33px;top:40px;bottom:-24px;width:2px;background:var(--ink)}
-.check{position:relative;display:block;padding:10px 0;cursor:pointer}
-.check input{position:absolute;opacity:0;width:1px;height:1px}
-.node{position:absolute;left:-48px;top:8px;display:grid;place-items:center;width:32px;height:32px;border:2px solid var(--line);border-radius:50%;background:var(--ink);font:600 13px/1 var(--display);color:var(--mute);transition:background-color .2s,border-color .2s}
-.node::after{content:"";display:none;width:6px;height:12px;margin-top:-3px;border:solid var(--on-glow);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
-.check b,.group-title{display:block;font-weight:600;font-size:17px;line-height:1.4;padding-top:3px}
-.desc{display:grid;grid-template-rows:1fr;transition:grid-template-rows .25s,opacity .25s}
-.desc>span{overflow:hidden;color:var(--mute);font-size:15px}
-.check:has(input:checked) .node,.group:not(:has(input:not(:checked)))>.node{background:var(--glow);border-color:var(--glow)}
-.check:has(input:checked) .node::after,.group:not(:has(input:not(:checked)))>.node::after{display:block}
-.check:has(input:checked) .node .n,.group:not(:has(input:not(:checked)))>.node .n{display:none}
-.check:has(input:checked) b{color:var(--mute)}
-.check:has(input:checked) .desc{grid-template-rows:0fr;opacity:0}
-.check:has(input:focus-visible) .node{outline:2px solid var(--glow);outline-offset:2px}
-.group{padding:10px 0 4px}
-.group .check{padding:6px 0}
-.group .node{top:6px}
-.group .check .node{left:-39px;top:13px;width:14px;height:14px;border-width:2px}
-.group .check .node::after{width:3px;height:6px;margin-top:-2px;border-width:0 2px 2px 0}
-
-/* learn: course and factions */
-.course{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--deck)}
+/* course: the step nav stays in reach while the step text scrolls */
+.course{padding:20px 20px 0;border:1px solid var(--line);border-radius:16px;background:var(--deck)}
 .segments{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:18px}
 .segments span{height:4px;border-radius:2px;background:var(--line);transition:background-color .3s}
 .segments .done{background:var(--glow)}
-#lesson{min-height:13rem}
+#lesson{scroll-margin-top:16px}
 #lesson .count{margin:0;color:var(--mute);font-size:14px}
-#lesson h3{margin:4px 0 10px;font-size:21px}
-#lesson p:last-child{font-size:17px}
-.course-nav{display:flex;gap:8px}
+#lesson h3{margin:4px 0 12px;font-size:21px}
+#lesson ul,#lesson ol{padding-left:20px;margin:0 0 14px}
+#lesson li{margin-bottom:6px}
+.callout{margin:16px 0 0;padding:12px 14px;border-left:3px solid var(--glow);border-radius:0 10px 10px 0;background:color-mix(in srgb,var(--glow) 10%,transparent)}
+.callout b{display:block;font-size:14px;color:var(--glow)}
+.course-nav{position:sticky;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));display:flex;align-items:center;gap:8px;margin:16px -20px 0;padding:12px 20px;border-top:1px solid var(--line);border-radius:0 0 16px 16px;background:var(--deck)}
 .course-nav #next{flex:1}
-#lessonCount{display:block;margin-top:10px;color:var(--mute);font-size:14px}
+.course-nav small{display:none}
+#lessonCount{display:block;margin-top:12px;color:var(--mute);font-size:14px}
+
+/* factions */
 .search{width:100%;min-height:48px;margin:6px 0 4px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:var(--deck);color:var(--text);font:inherit}
-.factions{list-style:none;padding:0;margin:8px 0 16px}
-.faction{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.factions{list-style:none;padding:0;margin:4px 0 8px}
+.faction{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
 .faction b{display:block;font-weight:600;font-size:16px}
 .faction>div>span{display:block;color:var(--mute);font-size:15px}
+.faction>div>span.tip{color:var(--text)}
 .diff{display:flex;align-items:center;gap:3px;margin-top:4px}
 .diff i{width:7px;height:7px;border-radius:50%;background:var(--line)}
 .diff i.on{background:var(--mute)}
@@ -144,7 +104,133 @@ summary::-webkit-details-marker{display:none}
 .faction.picked .btn{background:var(--glow);border-color:transparent;color:var(--on-glow)}
 .empty{padding:16px 0;color:var(--mute)}
 
+/* cheat sheet: the sticky game bar */
+.bar{position:sticky;top:0;z-index:5;margin:8px calc(-1 * var(--gut)) 0;padding:0 var(--gut);background:var(--ink);border-bottom:1px solid var(--line)}
+.bar-btn{display:grid;grid-template-columns:1fr auto auto 14px;align-items:center;gap:14px;width:100%;min-height:60px;padding:8px 0;border:0;background:none;text-align:left}
+.bar-btn b{display:block;font:600 16px/1.2 var(--display)}
+.bar-btn small{display:block;color:var(--mute);font-size:14px}
+.mini-hex{display:inline-grid;place-items:center;width:36px;height:31px;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);background:var(--glow);color:var(--on-glow);font:600 14px/1 var(--display)}
+.bar-score{display:flex;align-items:center;gap:6px;color:var(--mute);font-size:14px}
+.bar-cards{display:flex;gap:8px;font:700 20px/1 var(--display)}
+.bar-cards i{font-style:normal;color:var(--c)}
+.bar-cards i.used{opacity:.35}
+.chev{width:9px;height:9px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);transition:transform .2s}
+[aria-expanded=true] .chev{transform:rotate(-135deg)}
+.bar-panel{padding:4px 0 16px}
+.game-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.round{display:flex;align-items:center;gap:6px}
+.round b{font:600 17px var(--display);min-width:6.5em;text-align:center}
+.round .btn{width:44px;padding:0;font-size:20px}
+.mine{color:var(--mute);font-size:14px}
+.link{border:0;background:none;color:var(--glow);font-weight:600;padding:0;text-decoration:underline;text-underline-offset:3px}
+.phases{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;margin:14px 0;padding:4px;border-radius:12px;background:var(--raise)}
+.phases button{min-height:40px;padding:0 4px;border:0;border-radius:9px;background:none;color:var(--mute);font-size:14px;font-weight:600}
+.phases [aria-pressed=true]{background:var(--glow);color:var(--on-glow)}
+.track{--w:calc((100% - 20px) / 8.5);display:flex;max-width:440px;padding-bottom:calc(var(--w) * .433);margin:4px 0 8px}
+.track button{flex:none;width:var(--w);aspect-ratio:1.1547;padding:0;border:0;background:var(--raise);color:var(--mute);font:600 clamp(11px,2.6vw,15px)/1 var(--display);clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);transition:background-color .15s,color .15s}
+.track button+button{margin-left:calc(var(--w) * -.25 + 2px)}
+.track button:nth-child(even){transform:translateY(50%)}
+.track .goal{background:color-mix(in srgb,var(--glow) 30%,var(--raise));color:var(--text)}
+.track .on{background:var(--glow);color:var(--on-glow)}
+.track button:focus-visible{outline:0;background:var(--text);color:var(--ink)}
+
+/* cheat sheet: phases */
+.phase h2{margin-top:24px}
+.phase-end{margin-top:28px;padding-top:16px;border-top:1px solid var(--line)}
+.phase-end p{margin:0 0 10px;color:var(--mute);font-size:15px}
+.cards{list-style:none;padding:0;margin:8px 0 0}
+.card{border-bottom:1px solid var(--line)}
+.card:first-child{border-top:1px solid var(--line)}
+.card summary{display:grid;grid-template-columns:44px 1fr auto;align-items:center;column-gap:14px;padding:12px 4px;list-style:none;cursor:pointer}
+.card .init{grid-row:1/3;font:700 32px/1 var(--display);color:var(--c);text-align:center}
+.card summary b{font-weight:600;font-size:17px}
+.card summary .short{grid-column:2;color:var(--mute);font-size:14px}
+.card .tag{grid-column:3;grid-row:1/3;padding:3px 10px;border-radius:99px;background:var(--glow);color:var(--on-glow);font-size:13px;font-weight:600}
+.card .more{padding:0 4px 16px 62px}
+.card .more p{margin:0 0 8px;font-size:15px}
+.card .more p+p{color:var(--mute)}
+.card.mine-card summary{background:linear-gradient(90deg,color-mix(in srgb,var(--c) 12%,transparent),transparent 70%)}
+summary::-webkit-details-marker{display:none}
+.details-tip{margin:0 0 12px}
+.details-tip summary{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:var(--glow);font-weight:600;list-style:none;cursor:pointer}
+.details-tip summary::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translate(-2px,-2px)}
+.details-tip[open] summary::after{transform:rotate(-135deg)}
+.details-tip p{color:var(--mute);font-size:15px}
+
+/* cheat sheet: status timeline */
+.timeline{list-style:none;position:relative;margin:20px 0 8px;padding:0 0 0 48px}
+.timeline::before{content:"";position:absolute;left:15px;top:20px;bottom:20px;width:2px;background:var(--line)}
+.timeline>li{position:relative}
+.timeline>li:last-child::after{content:"";position:absolute;left:-33px;top:40px;bottom:-24px;width:2px;background:var(--ink)}
+.check{position:relative;display:block;padding:10px 0;cursor:pointer}
+.check input{position:absolute;opacity:0;width:1px;height:1px}
+.node{position:absolute;left:-48px;top:8px;display:grid;place-items:center;width:32px;height:32px;border:2px solid var(--line);border-radius:50%;background:var(--ink);font:600 13px/1 var(--display);color:var(--mute);transition:background-color .2s,border-color .2s}
+.node::after{content:"";display:none;width:6px;height:12px;margin-top:-3px;border:solid var(--on-glow);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.check b{display:block;font-weight:600;font-size:17px;line-height:1.4;padding-top:3px}
+.desc{display:grid;grid-template-rows:1fr;transition:grid-template-rows .25s,opacity .25s}
+.desc>span{overflow:hidden;color:var(--mute);font-size:15px}
+.check:has(input:checked) .node{background:var(--glow);border-color:var(--glow)}
+.check:has(input:checked) .node::after{display:block}
+.check:has(input:checked) .node .n{display:none}
+.check:has(input:checked) b{color:var(--mute)}
+.check:has(input:checked) .desc{grid-template-rows:0fr;opacity:0}
+.check:has(input:focus-visible) .node{outline:2px solid var(--glow);outline-offset:2px}
+.quick{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:0 0 10px}
+.quick .btn{min-height:40px;padding:0 14px}
+.steps{list-style:none;counter-reset:s;padding:0;margin:0 0 12px}
+.steps>li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:12px;padding:6px 0}
+.steps>li::before{content:counter(s);width:28px;height:28px;border-radius:50%;background:var(--raise);font:600 13px/28px var(--display);text-align:center}
+
+/* shared disclosure rows */
+.qa{border-bottom:1px solid var(--line)}
+.qa:first-of-type{border-top:1px solid var(--line)}
+.qa summary{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;padding:16px 4px;list-style:none;cursor:pointer}
+.qa summary b{font-weight:600;font-size:17px}
+.qa summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);transition:transform .2s}
+.qa[open] summary::after{transform:rotate(-135deg)}
+.qa>div,.qa>p{padding:0 4px 18px}
+.qa>div ol,.qa>div ul{padding-left:20px;margin:0}
+.settings{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:20px}
+.toggle{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}
+.toggle input{width:20px;height:20px;accent-color:var(--glow)}
+
+/* turn helper: full-screen sheet, actions pinned under the thumb */
+.sheet{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;background:var(--ink);animation:rise .2s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.sheet-head{display:grid;grid-template-columns:88px 1fr 88px;align-items:center;gap:8px;padding:max(8px,env(safe-area-inset-top)) 8px 8px;border-bottom:1px solid var(--line)}
+.sheet-head button{min-height:44px;border:0;background:none;color:var(--mute);font-weight:600;font-size:15px}
+.sheet-head .x{justify-self:end;width:44px;font-size:24px;line-height:1}
+.sheet-head .back{justify-self:start;padding:0 8px}
+.sheet-meta{text-align:center;color:var(--mute);font-size:13px}
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:6px}
+.pipeline span{height:4px;border-radius:2px;background:var(--line)}
+.pipeline .done{background:var(--glow)}
+.pipeline .now{background:var(--text)}
+.pipeline .skip{background:repeating-linear-gradient(90deg,var(--line) 0 4px,transparent 4px 8px)}
+.sheet-body{flex:1;min-height:0;overflow:auto;width:100%;max-width:40rem;margin:0 auto;padding:24px 20px}
+.sheet-body h2{margin:0 0 14px;font-size:24px;outline:0}
+.sheet-body ol,.sheet-body ul{padding-left:20px;margin:0 0 12px}
+.sheet-body li{margin-bottom:8px}
+.sheet-foot{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--deck)}
+.sheet-foot .btn{min-height:56px;font-size:16px}
+.options{display:grid;gap:8px}
+.option{display:grid;gap:2px;width:100%;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--deck);text-align:left}
+.option b{font:600 17px/1.3 var(--display)}
+.option span{color:var(--mute);font-size:15px}
+.check-q{color:var(--mute)}
+body.locked{overflow:hidden}
+
+/* help */
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.jump button{min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:99px;background:none;font-size:14px;font-weight:600}
+.glossary{margin:8px 0 0}
+.glossary div{display:grid;grid-template-columns:minmax(9rem,32%) 1fr;gap:4px 16px;padding:10px 0;border-bottom:1px solid var(--line)}
+.glossary dt{font-weight:600}
+.glossary dt small{display:block;color:var(--mute);font-weight:400;font-size:13px}
+.glossary dd{margin:0;color:var(--mute)}
+
 @media (min-width:900px){
+  :root{--gut:56px}
   body{display:grid;grid-template-columns:248px minmax(0,1fr)}
   .rail{position:sticky;top:0;height:100dvh;border-right:1px solid var(--line);padding:16px 12px}
   .brand{padding:12px 8px 28px}
@@ -153,11 +239,14 @@ summary::-webkit-details-marker{display:none}
   .tabs svg{padding:0;width:22px;height:22px}
   .tabs [aria-current]{background:var(--raise)}
   .tabs [aria-current] svg{background:none}
-  main{padding:24px 56px 64px}
-  .strats{display:grid;grid-template-columns:1fr 1fr;column-gap:32px}
+  main{padding-top:24px;padding-bottom:64px}
+  .choices{display:grid;grid-template-columns:1fr 1fr}
+  .course-nav{bottom:0}
+  .sheet{left:auto;width:480px;border-left:1px solid var(--line)}
 }
 @media (max-width:899px){.rail{display:contents}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:380px){.glossary div{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -168,101 +257,329 @@ summary::-webkit-details-marker{display:none}
 </header>
 <nav class="tabs" aria-label="Разделы">
 <button data-tab="start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10l5 8.5-5 8.5H7L2 12z"/></svg>Главная</button>
-<button data-tab="turn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Ход</button>
-<button data-tab="round"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg>Раунд</button>
-<button data-tab="learn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3zM21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/></svg>Учёба</button>
+<button data-tab="prep"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3zM21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/></svg>Подготовка</button>
+<button data-tab="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Шпаргалка</button>
 <button data-tab="help"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7"/><path d="M12 17.5v.01"/></svg>Справка</button>
 </nav>
 </div>
 <main>
 <section id="start" class="page">
-<h2 class="hero">Побеждает тот, кто первым наберёт 10 победных очков</h2>
-<div class="track" id="track" role="group" aria-label="Мой счёт"></div>
-<p class="track-note" id="trackNote" aria-live="polite"></p>
-<p class="lead">Не тот, у кого больше флота или планет. Почти все решения стоит проверять вопросом: «Поможет ли это выполнить цель?»</p>
-<h2>Что открыть</h2>
-<ul class="next">
-<li><button onclick="show('learn')"><b>До партии</b><span>Пройди короткий курс и выбери фракцию.</span></button></li>
-<li><button onclick="show('turn')"><b>Во время хода</b><span>Проверь, какие действия доступны и в каком порядке.</span></button></li>
-<li><button onclick="show('round')"><b>В конце раунда</b><span>Не забудь про цели, пополнение и обновление.</span></button></li>
-</ul>
+<h2 class="hero">Первая партия в Twilight Imperium</h2>
+<p class="lead">Правила тебе объяснят за столом. Здесь — то, что поможет не потеряться.</p>
+<div class="choices">
+<button class="choice" id="choicePrep" onclick="show('prep')"><b id="prepTitle"></b><span>7 коротких шагов и выбор фракции</span></button>
+<button class="choice" id="choicePlay" onclick="show('play')"><b id="playTitle"></b><span>Что делать в этой фазе и в свой ход</span></button>
+</div>
+<h2>Игра за минуту</h2>
+<ol class="minute">
+<li>Побеждает тот, кто первым наберёт 10 победных очков. Почти все очки дают цели: карты с условиями вроде «контролируй 6 планет».</li>
+<li>Каждый раунд все выбирают карту стратегии, потом по очереди делают по одному действию, пока все не спасуют.</li>
+<li>Самое частое действие — положить жетон на систему и привести туда корабли.</li>
+<li>В конце раунда ты проверяешь цели и забираешь очки.</li>
+<li>Перед каждым решением спрашивай себя: «Это приближает меня к цели?»</li>
+</ol>
 </section>
 
-<section id="turn" class="page" hidden>
-<h2>Что делать в свой ход?</h2>
-<p class="lead">В фазе действий игроки ходят по очереди. Обычно ты выбираешь <b>одно</b> из трёх действий.</p>
-<details class="action"><summary><b>Тактическое</b><span>Активировать систему, передвинуть корабли, провести бой, высадить войска, произвести юниты.</span></summary>
-<div><ol class="steps"><li>Активируй систему жетоном из тактического резерва.</li><li>Перемести корабли (с учётом скорости, вместимости и жетонов).</li><li>При необходимости проведи космический бой.</li><li>Объяви вторжение и проведи наземный бой.</li><li>Произведи юниты, если есть PRODUCTION в активной системе.</li></ol><p>Не все этапы обязательны; порядок менять нельзя.</p></div></details>
-<details class="action"><summary><b>Стратегическое</b><span>Разыграть основную способность своей стратегической карты.</span></summary>
-<div><p>Другие игроки могут использовать вторичную способность по её условиям.</p><button class="btn" onclick="show('turn','strategies')">Открыть 8 карт</button></div></details>
-<details class="action"><summary><b>Компонентное</b><span>Разыграть действие с пометкой ACTION на подходящей карте или листе фракции.</span></summary>
-<div><p>Выбери ровно один эффект с пометкой ACTION на карте действий, технологии, листе фракции или другом игровом компоненте. Выполни его текст полностью.</p></div></details>
-<p class="note" style="margin-top:20px">Пасовать можно после того, как ты выполнил стратегическое действие. После паса ты больше не делаешь ходов в этой фазе, но можешь реагировать на действия других игроков по правилам.</p>
-<h2 id="strategies">8 стратегических карт</h2>
-<p>Номер определяет инициативу (порядок хода), а не силу карты. В свой ход ты обязан когда-нибудь выполнить её стратегическое действие до паса.</p>
-<ol class="strats" id="strategy"></ol>
-</section>
-
-<section id="round" class="page" hidden>
-<h2>Порядок игрового раунда</h2>
-<p>Отмечай этапы по ходу раунда. Отметки хранятся только на твоём устройстве.</p>
-<ol class="timeline" id="roundChecks"></ol>
-<div class="round-bar"><span id="roundCount"></span><button class="btn" onclick="resetChecks()">Начать новый раунд</button></div>
-<p class="note" style="margin-top:20px">Фаза повестки появляется после снятия жетона хранителей с Мекатол-Рекса. До этого раунд заканчивается после фазы статуса.</p>
-</section>
-
-<section id="learn" class="page" hidden>
-<h2>Курс новичка</h2>
+<section id="prep" class="page" hidden>
+<h2>Подготовка за 15 минут</h2>
 <div class="course">
 <div class="segments" id="lessonProgress"></div>
 <div id="lesson" aria-live="polite"></div>
-<div class="course-nav"><button class="btn" id="prev" onclick="lessonStep(-1)">Назад</button><button class="btn primary" id="next" onclick="lessonStep(1)">Дальше</button></div>
 <small id="lessonCount"></small>
+<div class="course-nav"><button class="btn" id="prev" onclick="lessonStep(-1)">Назад</button><button class="btn primary" id="next" onclick="lessonStep(1)">Дальше</button></div>
 </div>
 <h2 id="factions">Выбор фракции</h2>
-<p>В базовой игре 17 фракций. Краткие характеристики ниже — ориентиры по стилю, не рейтинг силы.</p>
+<p>Для первой партии бери фракцию с простыми способностями. Сильнее она или слабее — сейчас неважно.</p>
 <p class="note" id="picked"></p>
-<input class="search" id="search" type="search" placeholder="Поиск по названию или стилю" aria-label="Поиск фракции" oninput="renderRaces()">
-<ul class="factions" id="races"></ul>
+<input class="search" id="search" type="search" placeholder="Название или стиль: торговля, бой" aria-label="Поиск фракции" oninput="renderRaces()">
+<h3 id="easyTitle">Для первой партии</h3>
+<ul class="factions" id="easyRaces"></ul>
+<h3 id="restTitle">Остальные</h3>
+<ul class="factions" id="restRaces"></ul>
+<p class="empty" id="racesEmpty" hidden>Такой фракции нет в базовой игре. Проверь написание или ищи по стилю: «торговля», «бой».</p>
+</section>
+
+<section id="play" class="page" hidden>
+<h2 class="sr">Шпаргалка</h2>
+<div class="bar">
+<button class="bar-btn" id="barBtn" aria-expanded="false" aria-controls="barPanel" onclick="toggleBar()">
+<span><b id="barRound"></b><small id="barPhase"></small></span>
+<span class="bar-score"><span class="mini-hex" id="barScore"></span>из 10</span>
+<span class="bar-cards" id="barCards"></span>
+<span class="chev" aria-hidden="true"></span>
+</button>
+<div class="bar-panel" id="barPanel" hidden>
+<div class="game-row">
+<div class="round"><button class="btn" onclick="changeRound(-1)" aria-label="Предыдущий раунд">−</button><b id="roundLabel"></b><button class="btn" onclick="changeRound(1)" aria-label="Следующий раунд">+</button></div>
+<div class="mine" id="mineFaction"></div>
+</div>
+<div class="phases" id="phases" role="group" aria-label="Фаза"></div>
+<div class="track" id="track" role="group" aria-label="Мой счёт"></div>
+<p class="hint" id="trackNote" aria-live="polite"></p>
+</div>
+</div>
+
+<div id="phase-strategy" class="phase">
+<h2>Фаза стратегии</h2>
+<p class="lead">Начиная со спикера, каждый берёт карту: при 3–4 игроках по две, при 5–6 по одной. Отметь свои.</p>
+<details class="details-tip"><summary>Как выбрать карту</summary>
+<p>Смотри на цели. Нужна технология — «Технология», мало жетонов — «Лидерство», цель уже выполнена — «Империя».</p>
+<p>Другие могут повторить слабую версию любой карты за жетон стратегии, так что чужая карта тоже полезна. На невыбранные карты кладут по торговому товару: их заберёт тот, кто возьмёт карту в следующем раунде.</p>
+</details>
+<ol class="cards" id="strategy"></ol>
+<div class="phase-end"><p>Когда все выбрали карты:</p><button class="btn primary" onclick="setPhase('action')">Перейти к фазе действий</button></div>
+</div>
+
+<div id="phase-action" class="phase" hidden>
+<h2>Фаза действий</h2>
+<p class="lead">По порядку инициативы, по одному действию за ход, пока все не спасуют.</p>
+<button class="btn primary big" id="turnBtn" onclick="startTurn()">Мой ход</button>
+<h3 id="myCardsTitle">Мои карты</h3>
+<ol class="cards" id="myCardsList"></ol>
+<div class="phase-end"><p>Когда все спасовали:</p><button class="btn primary" onclick="setPhase('status')">Перейти к фазе статуса</button></div>
+</div>
+
+<div id="phase-status" class="phase" hidden>
+<h2>Фаза статуса</h2>
+<p>Отмечай шаги по ходу. Отметки хранятся только на твоём устройстве.</p>
+<ol class="timeline" id="statusChecks"></ol>
+<div class="phase-end"><p id="statusEndHint"></p><button class="btn primary" id="statusNext" onclick="afterStatus()"></button></div>
+</div>
+
+<div id="phase-agenda" class="phase" hidden>
+<h2>Фаза повестки</h2>
+<p class="note">Влияние, потраченное на голосование, вернётся в конце фазы. Планеты, истощённые в фазе действий, уже обновлены в статусе — ими тоже можно голосовать.</p>
+<ol class="steps">
+<li>Спикер открывает и читает закон.</li>
+<li>Голосуют по очереди, начиная слева от спикера; спикер последний. Голоса = влияние планет, которые ты истощаешь. Торговые товары не считаются. Можно воздержаться.</li>
+<li>Победивший вариант вступает в силу.</li>
+<li>Второй закон — так же.</li>
+<li>Обнови все планеты.</li>
+</ol>
+<div class="phase-end"><p>Когда оба закона приняты:</p><button class="btn primary" onclick="nextRound()">Начать следующий раунд</button></div>
+</div>
+
+<h3>Всегда под рукой</h3>
+<details class="qa"><summary><b>Бой</b></summary><div><ol>
+<li>Заградогонь (ANTI-FIGHTER BARRAGE) — только в первом раунде боя: юниты с этой способностью стреляют по истребителям.</li>
+<li>Объяви отступление, если хочешь: сначала решает защитник, потом нападающий.</li>
+<li>Брось кубики: попадание, если выпало не меньше числа боя (COMBAT).</li>
+<li>Распредели попадания по своим кораблям. SUSTAIN DAMAGE — положи корабль на бок вместо уничтожения.</li>
+<li>Отступление: объявивший уводит корабли в соседнюю систему без чужих кораблей.</li>
+</ol><p style="margin:10px 0 0">Раунды повторяются, пока одна сторона не проиграет или не отступит. Наземный бой — так же, пехотой.</p></div></details>
+<details class="qa"><summary><b>Жетоны командования</b></summary><div><ul>
+<li><b>Тактика</b> — активировать систему и двигаться.</li>
+<li><b>Флот</b> — сколько кораблей (кроме истребителей) может стоять в одной системе.</li>
+<li><b>Стратегия</b> — повторить чужую карту стратегии (вторичная способность).</li>
+</ul><p style="margin:10px 0 0">Корабли не уходят из системы, где лежит твой жетон. В фазе статуса жетоны с карты возвращаются, а ты получаешь 2 новых.</p></div></details>
+<details class="qa"><summary><b>Производство</b></summary><div><ul>
+<li>Строить можно в системе, где есть твой космодок, на шаге производства тактического действия.</li>
+<li>Плати ресурсами. Истребители и пехота — 2 штуки за 1 ресурс.</li>
+<li>Всего юнитов не больше числа PRODUCTION космодока.</li>
+<li>Кораблей в системе не больше лимита флота.</li>
+</ul></div></details>
+<div class="settings">
+<label class="toggle"><input type="checkbox" id="mecatol" onchange="setMecatol(this.checked)">Мекатол-Рекс захвачен — в раунде есть повестка</label>
+<label class="toggle" id="wakeRow"><input type="checkbox" id="wake" onchange="setWake(this.checked)">Не гасить экран во время партии</label>
+<p class="hint" id="wakeMsg" aria-live="polite"></p>
+<button class="btn" onclick="newGame()">Начать новую партию</button>
+</div>
 </section>
 
 <section id="help" class="page" hidden>
-<h2>Быстрые ответы</h2>
+<h2>Справка</h2>
+<input class="search" id="helpSearch" type="search" placeholder="Вопрос или термин" aria-label="Поиск по справке" oninput="renderHelp()">
+<div class="jump" id="jump" aria-label="Темы"></div>
 <div id="faq"></div>
-<p class="note" style="margin-top:20px">Это учебная шпаргалка, а не замена официальному Rules Reference. При споре используйте актуальный официальный справочник правил.</p>
+<h3 id="glossaryTitle">Словарь</h3>
+<dl class="glossary" id="glossary"></dl>
+<p class="empty" id="helpEmpty" hidden>Ничего не нашлось. Попробуй другое слово или спроси у ведущего.</p>
+<p class="note" style="margin-top:20px">Шпаргалка упрощает правила. Если за столом спор — прав официальный Rules Reference.</p>
 </section>
-<footer>Фанатский учебный проект. Не связан с Fantasy Flight Games или правообладателями Twilight Imperium.</footer>
+<footer>Неофициальный помощник для базовой игры. Не связан с Fantasy Flight Games. При споре прав официальный Rules Reference.</footer>
 </main>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+<div class="sheet-head"><button class="back" id="sheetBack" onclick="goBack()">‹ Назад</button><div class="sheet-meta" id="sheetMeta"></div><button class="x" onclick="closeTurn()" aria-label="Закрыть помощник хода">×</button></div>
+<div class="sheet-body" id="sheetBody"></div>
+<div class="sheet-foot" id="sheetFoot"></div>
+</div>
 <script>
-const lessons=[['Цель игры','Первым набери 10 победных очков. Главный источник — публичные цели; есть также секретные цели и другие источники очков. В фазе статуса обычно можно выполнить только одну публичную и одну секретную цель, если их условия выполнены.'],['Твой стол','У тебя есть домашняя система, стартовые корабли, технологии, лист фракции и жетоны командования. Планеты дают ресурсы для покупки и влияние для голосований и получения жетонов.'],['Как идёт раунд','Стратегия → действия → статус → повестка (после открытия Мекатол-Рекса). В стратегии выбирают карты; в действиях ходят по очереди; в статусе получают очки и обновляются.'],['Три действия','В свой ход делай тактическое, стратегическое или компонентное действие. Тактическое — работа с одной системой. Стратегическое — основная способность выбранной карты. Компонентное — эффект с пометкой ACTION.'],['Тактическое действие','Положи жетон из тактического резерва в систему → передвинь корабли → космический бой, если нужен → вторжение на планеты → производство, если доступно. Корабли из систем, где уже лежит твой жетон командования, обычно не могут двигаться.'],['Экономика и технологии','Ресурсы оплачивают юниты и некоторые эффекты; влияние помогает получать жетоны и участвовать в политике. Торговые товары заменяют ресурсы или влияние при оплате, но не при голосовании. Технологии открывают новые возможности.'],['Перед первым ходом','Посмотри открытые цели, свою стратегическую карту, соседние системы и доступные планеты. Спроси себя: «Какой мой путь к очку в этом раунде?» Не обязательно воевать ради войны.']];
-const factions=[['Арборек','Рост и пехота','Сложная'],['Баронство Летнев','Тяжёлый флот','Средняя'],['Клан Саар','Мобильное производство','Средняя'],['Угли Муаата','Военные солнца','Сложная'],['Эмираты Хакан','Торговля','Простая'],['Федерация Сол','Пехота и экспансия','Простая'],['Призраки Креусса','Червоточины и мобильность','Сложная'],['Л1З1КС: коллектив разума','Дредноуты и давление','Средняя'],['Королевство Кссча','Дипломатия и оборона','Средняя'],['Ментакская коалиция','Налёты и торговля','Средняя'],['Наалу: коллектив','Инициатива и истребители','Средняя'],['Некровирус','Технологии через сражения','Сложная'],['Сардакк Н’орр','Прямой бой','Средняя'],['Университеты Джол-Нар','Технологии','Простая'],['Винну','Мекатол-Рекс','Сложная'],['Братство Йинь','Пехота и самопожертвование','Средняя'],['Племена Йссарил','Карты действий и хитрость','Средняя']];
-const strategies=[['1','Лидерство','Получение жетонов командования'],['2','Дипломатия','Защита системы и обновление планет'],['3','Политика','Карты действий и контроль повесток'],['4','Строительство','Постройка космодоков и ПВО'],['5','Торговля','Товары и торговые товары'],['6','Военное дело','Манёвры и производство'],['7','Технология','Исследование технологий'],['8','Империя','Секретные цели и победные очки']];
-const rounds=[['Стратегическая фаза','Игроки по порядку выбирают стратегические карты; число карт на игрока зависит от количества участников.'],['Фаза действий','Игроки выполняют по одному действию по инициативе, пока все не спасуют.'],['Статус: цели','По очереди проверяют выполнение публичной и секретной целей (обычно не более одной каждого типа).'],['Статус: новая цель','Открывают следующую публичную цель, если возможно.'],['Статус: карты действий','Добирают по одной карте действий.'],['Статус: жетоны','Возвращают жетоны командования с поля, получают по два жетона и перераспределяют их.'],['Статус: обновление','Обновляют истощённые планеты, исправляют повреждения кораблей, возвращают стратегические карты.'],['Повестка (если открыта)','Рассматривают две повестки и голосуют, затем обновляют планеты; после этого начинается следующий раунд.']];
-const faqs=[['Как активировать систему?','Возьми жетон из тактического резерва и положи его в систему, где ещё нет твоего жетона. Затем выполни этапы тактического действия по порядку.'],['Можно ли передвигать корабли из уже активированной системы?','Как правило, нет: если в исходной системе лежит твой жетон командования, корабли из неё не уходят.'],['Когда происходит бой?','Когда после перемещения в активной системе оказываются корабли разных игроков, которые должны сражаться. Космический бой происходит до вторжения.'],['Как захватить планету?','Во время вторжения высади наземные войска с кораблей в активной системе. Если есть защитники, проведи наземный бой.'],['Когда производить корабли?','На этапе производства тактического действия, если у тебя есть подходящий юнит с PRODUCTION в активной системе. Соблюдай стоимость и лимит производства.'],['Зачем нужны жетоны командования?','Тактический резерв — активации систем; стратегический — оплата вторичных способностей; флот — ограничение количества не-истребительных кораблей в системе.'],['Что такое Мекатол-Рекс?','Центральная планета. Для первого захвата нужно оплатить 6 влияния и убрать жетон хранителей; это открывает фазу повестки и даёт очко игроку, снявшему жетон.'],['Можно ли выиграть без войны?','Да. Главная задача — очки, а не уничтожение соперников. Но иногда для целей нужно контролировать системы и планеты.']];
+const lessons=[
+['Как победить','<p>Нужно первым набрать 10 победных очков. Почти все они приходят из целей. Публичные цели лежат открыто и доступны всем: первого этапа дают 1 очко, второго — 2. Секретная цель только у тебя и даёт 1 очко.</p><p>Очки за цели чаще всего забирают в конце раунда: не больше одной публичной и одной секретной. Значит, каждый раунд стоит планировать под конкретную цель.</p>','Найди на столе','Открытые публичные цели и свою секретную. Какая из них кажется самой лёгкой?'],
+['Что у тебя есть','<p>Перед тобой домашняя система, стартовые корабли и лист фракции. Прочитай способности на листе первыми — это твой стиль игры.</p><p>На планшете командования три зоны жетонов. Жетоны — твои действия на раунд, их всегда не хватает:</p><ul><li><b>Тактика (3)</b> — активировать систему и двигаться.</li><li><b>Флот (3)</b> — сколько кораблей может стоять в одной системе.</li><li><b>Стратегия (2)</b> — повторить чужую карту стратегии.</li></ul>','Найди на столе','Лист фракции и планшет с жетонами. Прочитай способности своей фракции.'],
+['Ресурсы и влияние','<p>У каждой планеты два числа. Ресурсы — деньги на корабли и технологии. Влияние — деньги на жетоны командования и голосования.</p><p>Чтобы заплатить, переверни карту планеты лицом вниз (истощи). Одна планета платит или ресурсами, или влиянием, не тем и другим. Истощённые планеты возвращаются в конце раунда.</p><p>Торговые товары (trade goods) — универсальные деньги: один товар заменяет 1 ресурс или 1 влияние. На голосование их тратить нельзя.</p>','Найди на столе','Карты своих домашних планет. Сколько у тебя ресурсов и влияния всего?'],
+['Как идёт раунд','<p>Раунд состоит из четырёх фаз.</p><ol><li><b>Стратегия.</b> Начиная со спикера, все берут по карте стратегии. Номер карты — твой порядок хода в раунде.</li><li><b>Действия.</b> По очереди, по одному действию за ход, круг за кругом, пока все не спасуют. Это самая длинная фаза.</li><li><b>Статус.</b> Забираешь очки за цели, получаешь 2 новых жетона, карту действия, обновляешь планеты.</li><li><b>Повестка.</b> Голосование за законы. Появляется только после того, как кто-то захватит Мекатол-Рекс в центре карты. В первых раундах её обычно нет.</li></ol>','Запомни','Твой ход в фазе действий короткий — одно действие. Но ходов за раунд много.'],
+['Твой ход','<p>За ход — одно действие или пас.</p><ul><li><b>Тактическое</b> — жетон на систему, привести корабли, повоевать, высадиться, построить. Так проходит большинство ходов.</li><li><b>Стратегическое</b> — разыграть свою карту стратегии. Один раз за раунд обязательно.</li><li><b>Компонентное</b> — эффект с пометкой ACTION с карты или листа фракции.</li></ul><p><b>Главное правило:</b> корабли не уходят из системы, где лежит твой жетон. Активировал систему — всё, что в ней стоит, застряло до конца раунда.</p>','Запомни','Активируй систему, куда едешь, а не ту, откуда.'],
+['Бой за минуту','<p>Бой начинается, когда ты приводишь корабли в систему с чужими кораблями. Каждый корабль бросает кубик: выпало не меньше его числа боя — попадание. За каждое попадание противник убирает корабль на свой выбор.</p><p>Раунды боя повторяются, пока кто-то не проиграет или не отступит. Крупные корабли с пометкой SUSTAIN DAMAGE переживают одно попадание: их кладут на бок вместо того, чтобы убрать. Наземный бой на планете идёт так же, только пехотой.</p>','Найди на столе','На листе фракции или карточке юнитов числа боя (COMBAT) своих кораблей. Чем меньше число, тем лучше.'],
+['Первый раунд и пять ошибок','<p>План на первый раунд: занять 2–3 свободные планеты рядом с домом, достроить пару кораблей, присмотреться к целям.</p><p>Частые ошибки:</p><ol><li>Активировать домашнюю систему и запереть там флот.</li><li>Потратить все тактические жетоны в начале раунда.</li><li>Забыть разыграть карту стратегии — без этого нельзя пасовать.</li><li>Строить сверх лимита флота.</li><li>Воевать ради войны, а не ради целей.</li></ol>','Запомни','Шпаргалка проведёт тебя по ходу шаг за шагом — открой её, когда начнётся партия.']
+];
+const factions=[
+['Федерация Сол','Много пехоты, быстрая экспансия','Универсальная, прощает ошибки','Простая',1],
+['Баронство Летнев','Крепкий флот и оборона','Прямолинейная, трудно проиграть бой','Простая',1],
+['Университеты Джол-Нар','Технологии','Понятная цель, но слаба в бою — лучше не нападать первой','Простая',1],
+['Эмираты Хакан','Торговля и сделки','Много денег, но нужно договариваться с соседями','Простая',1],
+['L1Z1X: коллектив разума','Тяжёлые корабли и давление','Простая идея, но требует атаковать','Средняя',0],
+['Сардакк Н’орр','Прямой бой','Простая идея, но требует воевать','Средняя',0],
+['Королевство Кссча','Дипломатия и оборона','Хороша, если не хочется воевать','Средняя',0],
+['Наалу: коллектив','Первый ход и истребители','Нужно чувствовать порядок ходов','Средняя',0],
+['Ментакская коалиция','Пиратство и засады','Интересна, но зависит от соседей','Средняя',0],
+['Племена Йссарил','Карты действий и хитрость','Нужно знать колоду карт','Средняя',0],
+['Клан Саар','Кочевое производство','Необычная экономика, уязвима','Средняя',0],
+['Угли Муаата','Военное солнце с первого раунда','Медленный старт, мало денег','Сложная',0],
+['Арборек','Пехота, которая строит','Непривычные правила производства','Сложная',0],
+['Призраки Креусса','Червоточины и неожиданные удары','Нужно хорошо читать карту','Сложная',0],
+['Винну','Борьба за Мекатол-Рекс','Слабый старт, нужен чёткий план','Сложная',0],
+['Братство Йинь','Пехота и самопожертвование','Сильные способности с неочевидной ценой','Сложная',0],
+['Некровирус','Крадёт технологии в бою','Не исследует как все, живёт за счёт других','Сложная',0]
+];
+const strategies=[
+[1,'Лидерство','Получи 3 жетона командования. Можешь купить ещё: 1 жетон за 3 влияния.','Покупают жетоны за влияние, 3 за жетон. Жетон стратегии не нужен.','Жетоны командования'],
+[2,'Дипломатия','Выбери систему со своей планетой (не Мекатол-Рекс): другие кладут туда свои жетоны и не могут её активировать. Обнови до 2 истощённых планет.','За жетон стратегии обновляют до 2 истощённых планет.','Защита системы и обновление планет'],
+[3,'Политика','Назначь нового спикера (не себя). Возьми 2 карты действий. Посмотри 2 верхние карты повестки и положи каждую наверх или вниз.','За жетон стратегии берут 2 карты действий.','Спикер и карты действий'],
+[4,'Строительство','Поставь PDS или космодок на свою планету. Можешь поставить ещё один PDS.','За жетон стратегии кладут свой жетон из запаса в любую систему и ставят PDS или космодок на свою планету в ней.','PDS и космодоки'],
+[5,'Торговля','Получи 3 торговых товара и пополни свои товары до максимума. Можешь разрешить любым игрокам пополнить товары бесплатно.','За жетон стратегии пополняют свои товары.','Торговые товары'],
+[6,'Военное дело','Сними один свой жетон с карты и верни в любую зону планшета. Можешь перераспределить жетоны.','За жетон стратегии строят юниты в одном космодоке домашней системы, не активируя её.','Вернуть жетон с карты'],
+[7,'Технология','Изучи 1 технологию. Можешь заплатить 6 ресурсов за вторую.','За жетон стратегии и 4 ресурса изучают 1 технологию.','Технологии'],
+[8,'Империя','Сразу получи очки за одну публичную цель, если выполняешь её. Затем +1 очко, если держишь Мекатол-Рекс, иначе возьми секретную цель.','За жетон стратегии берут секретную цель.','Очки за цели']
+];
+const statusSteps=[
+['Забери очки','По порядку инициативы. Максимум 1 публичная и 1 секретная цель.'],
+['Откройте новую публичную цель','Это делает спикер.'],
+['Возьми 1 карту действия',''],
+['Сними свои жетоны с карты','Все жетоны командования с систем возвращаются в запас.'],
+['Получи 2 жетона','И распредели все жетоны планшета заново.'],
+['Обнови все карты','Планеты и технологии лицом вверх.'],
+['Почини корабли','Поставь повреждённые обратно.'],
+['Верни карту стратегии','']
+];
+const faqs=[
+['Ход и движение',[
+['Можно сделать два действия за ход?','Нет, одно. Но ходов за раунд много: ты ходишь снова, когда очередь вернётся.'],
+['Почему корабли не могут уйти?','В их системе лежит твой жетон командования. Он уйдёт только в фазе статуса.'],
+['Можно активировать систему, где лежит чужой жетон?','Да. Мешает только твой собственный.'],
+['Корабль может пролететь сквозь чужой флот?','Нет. В системе с чужими кораблями движение заканчивается, и это может быть только активная система.'],
+['Как перевезти пехоту?','На корабле с вместимостью (CAPACITY), обычно на авианосце. Пехота и истребители вместе занимают места вместимости.']]],
+['Бой и захват',[
+['Кто выбирает, какой корабль погиб?','Владелец кораблей. Обычно сначала теряют истребители и кладут на бок корабли с SUSTAIN DAMAGE.'],
+['Как захватить планету?','Привези пехоту в систему и высади на планету. Если там чужие войска — наземный бой. Пустую планету забираешь сразу.'],
+['Почему нельзя потратить новую планету?','Захваченная планета приходит истощённой и обновится в фазе статуса.'],
+['Что такое Мекатол-Рекс?','Планета в центре карты. Чтобы высадиться туда первым, нужно заплатить 6 влияния и снять жетон хранителей. За это дают 1 очко, и с этого раунда после фазы статуса идёт фаза повестки.']]],
+['Деньги и сделки',[
+['Чем товары отличаются от торговых товаров?','Товары (commodities) сам ты потратить не можешь — их нужно отдать соседу. У него они становятся торговыми товарами (trade goods), которые заменяют ресурс или влияние.'],
+['Как договариваться с соседом?','В свой ход с каждым соседом можно заключить одну сделку: товары, торговые товары, карты договора. Устные обещания ничего не обязывают. Сосед — игрок, чьи юниты или планеты стоят в соседней или той же системе, что и твои.'],
+['Можно голосовать торговыми товарами?','Нет, только влиянием планет.']]],
+['Очки',[
+['Можно выиграть без войны?','Да. Очки дают за цели, а не за уничтоженные корабли. Но часть целей требует контролировать системы и планеты.'],
+['Когда заканчивается игра?','Сразу, как только кто-то набрал 10 очков, даже посреди раунда.']]]
+];
+const glossary=[
+['Активировать','Activate','Положить на систему жетон из тактической зоны'],
+['Истощить','Exhaust','Перевернуть карту лицом вниз после использования'],
+['Обновить','Ready','Вернуть карту лицом вверх'],
+['Инициатива','Initiative','Номер карты стратегии; чем меньше, тем раньше ходишь'],
+['Спикер','Speaker','Игрок, который первым выбирает карту стратегии и ведёт повестку'],
+['Запас','Reinforcements','Твои юниты и жетоны, которых нет на карте и планшете'],
+['Лимит флота','Fleet pool','Максимум кораблей (без истребителей) в одной системе = жетоны в зоне флота'],
+['Вместимость','Capacity','Сколько пехоты и истребителей везёт корабль'],
+['Космодок','Space dock','Строение на планете, в котором строят юниты'],
+['PDS','PDS','Планетарная пушка: стреляет по кораблям и десанту'],
+['Товары','Commodities','Деньги для обмена: сам не потратишь, нужно отдать'],
+['Торговые товары','Trade goods','Универсальные деньги: 1 ресурс или 1 влияние']
+];
 const store=(()=>{try{localStorage.setItem('ti4test','1');localStorage.removeItem('ti4test');return localStorage}catch(e){return {}}})();
-const pages=['start','turn','round','learn','help'],aliases={cards:['turn','strategies'],race:['learn','factions']},levels={'Простая':1,'Средняя':2,'Сложная':3};
-let step=Number(store.ti4step||0);
+const pages=['start','prep','play','help'],aliases={learn:['prep'],race:['prep','factions'],turn:['play'],round:['play'],cards:['play']},levels={'Простая':1,'Средняя':2,'Сложная':3};
+const phaseNames={strategy:'Стратегия',action:'Действия',status:'Статус',agenda:'Повестка'};
+let step=Math.min(Number(store.ti4step||0),lessons.length-1);
+const $=id=>document.getElementById(id);
+function load(k,d){try{return JSON.parse(store[k])??d}catch(e){return d}}
+function save(k,v){store[k]=JSON.stringify(v)}
 function plural(n,f){let m=n%10,t=n%100;return n+' '+(m===1&&t!==11?f[0]:m>=2&&m<=4&&(t<12||t>14)?f[1]:f[2])}
 function minutes(n){return plural(n,['минута','минуты','минут'])}
-function show(id,anchor){document.querySelectorAll('.page').forEach(x=>x.hidden=x.id!==id);document.querySelectorAll('[data-tab]').forEach(x=>x.dataset.tab===id?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));if(location.hash.slice(1)!==id)history.pushState(null,'','#'+id);anchor?document.getElementById(anchor).scrollIntoView():scrollTo(0,0)}
+function show(id,anchor){document.querySelectorAll('.page').forEach(x=>x.hidden=x.id!==id);document.querySelectorAll('[data-tab]').forEach(x=>x.dataset.tab===id?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));if(location.hash.slice(1)!==id)history.pushState(null,'','#'+id);if(id==='start')renderStart();if(id==='play')resumeTurn();anchor?$(anchor).scrollIntoView():scrollTo(0,0)}
 function route(){let id=location.hash.slice(1),a=aliases[id];if(a){history.replaceState(null,'','#'+a[0]);show(...a)}else show(pages.includes(id)?id:'start')}
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>show(b.dataset.tab));
-function initTrack(){document.getElementById('track').innerHTML=Array.from({length:11},(_,i)=>'<button'+(i===10?' class="goal"':'')+' aria-label="Мой счёт: '+i+'" onclick="setScore('+i+')">'+i+'</button>').join('');updateTrack()}
-function setScore(i){store.ti4vp=i;updateTrack()}
-function updateTrack(){let vp=Number(store.ti4vp||0);[...document.getElementById('track').children].forEach((b,i)=>{b.classList.toggle('on',vp>0&&i<=vp);b.setAttribute('aria-pressed',i===vp)});document.getElementById('trackNote').textContent=vp===0?'Отмечай свой счёт по ходу партии: нажми на число.':vp>=10?'10 очков. Это победа!':'У тебя '+plural(vp,['очко','очка','очков'])+'. До победы ещё '+(10-vp)+'.'}
-function renderLesson(){let x=lessons[step],last=step===lessons.length-1;document.getElementById('lessonProgress').innerHTML=lessons.map((_,i)=>'<span'+(i<=step?' class="done"':'')+'></span>').join('');document.getElementById('lesson').innerHTML='<p class="count">Шаг '+(step+1)+' из '+lessons.length+'</p><h3>'+x[0]+'</h3><p>'+x[1]+'</p>';document.getElementById('lessonCount').textContent=last?'Это последний шаг. Дальше выбор фракции.':'Осталось около '+minutes((lessons.length-1-step)*2);document.getElementById('prev').disabled=step===0;document.getElementById('next').textContent=last?'К выбору фракции':'Дальше'}
-function lessonStep(d){if(step===lessons.length-1&&d>0){document.getElementById('factions').scrollIntoView();return}step=Math.max(0,Math.min(lessons.length-1,step+d));store.ti4step=step;renderLesson()}
-function renderRaces(){let q=document.getElementById('search').value.trim().toLowerCase(),list=factions.map((f,i)=>[f,i]).filter(([f])=>f.join(' ').toLowerCase().includes(q));document.getElementById('races').innerHTML=list.length?list.map(([f,i])=>'<li class="faction" data-f="'+i+'"><div><b>'+f[0]+'</b><span>'+f[1]+'</span><span class="diff">'+[1,2,3].map(n=>'<i'+(n<=levels[f[2]]?' class="on"':'')+'></i>').join('')+'<small>'+f[2]+'</small></span></div><button class="btn" onclick="pick('+i+')"></button></li>').join(''):'<li class="empty">Ничего не нашлось. Попробуй слово из стиля игры, например «торговля».</li>';updatePicked()}
-function pick(i){store.ti4race=factions[i][0];updatePicked()}
-function updatePicked(){let r=store.ti4race;document.querySelectorAll('[data-f]').forEach(li=>{let on=factions[li.dataset.f][0]===r,b=li.querySelector('button');li.classList.toggle('picked',on);b.textContent=on?'Выбрано':'Выбрать';b.setAttribute('aria-pressed',on)});document.getElementById('picked').textContent=r?'Мой выбор: '+r:'Выбери понравившийся стиль; для первой партии удобны Сол, Хакан или Джол-Нар.'}
-function roundCheck(i,label,num){return '<label class="check"><input type="checkbox"'+(store['ti4check'+i]==='1'?' checked':'')+' onchange="tick('+i+',this.checked)"><span class="node"><span class="n">'+num+'</span></span><b>'+label+'</b><span class="desc"><span>'+rounds[i][1]+'</span></span></label>'}
-function renderRound(){let status=[2,3,4,5,6].map(i=>{let s=rounds[i][0].replace('Статус: ','');return '<li>'+roundCheck(i,s[0].toUpperCase()+s.slice(1),'')+'</li>'}).join('');document.getElementById('roundChecks').innerHTML='<li>'+roundCheck(0,rounds[0][0],1)+'</li><li>'+roundCheck(1,rounds[1][0],2)+'</li><li class="group"><span class="node"><span class="n">3</span></span><b class="group-title">Фаза статуса</b><ol>'+status+'</ol></li><li>'+roundCheck(7,rounds[7][0],4)+'</li>';updateRound()}
-function tick(i,on){store['ti4check'+i]=on?'1':'0';updateRound()}
-function updateRound(){let n=rounds.filter((_,i)=>store['ti4check'+i]==='1').length;document.getElementById('roundCount').textContent=n===rounds.length?'Раунд пройден':'Отмечено '+n+' из '+rounds.length}
-function resetChecks(){rounds.forEach((_,i)=>delete store['ti4check'+i]);renderRound()}
-document.getElementById('strategy').innerHTML=strategies.map(x=>'<li class="strat" style="--c:var(--s'+x[0]+')"><span class="init">'+x[0]+'</span><h3>'+x[1]+'</h3><p>'+x[2]+'</p></li>').join('');
-document.getElementById('faq').innerHTML=faqs.map(x=>'<details class="qa"><summary><b>'+x[0]+'</b></summary><p>'+x[1]+'</p></details>').join('');
-initTrack();renderLesson();renderRaces();renderRound();route();
+
+function renderStart(){let started=Number(store.ti4step||0)>0,inGame=Number(store.ti4round||1)>1||Number(store.ti4vp||0)>0||load('ti4cards',[]).length>0;$('prepTitle').textContent=started?'Продолжить курс: шаг '+(step+1)+' из '+lessons.length:'У меня 15 минут до игры';$('playTitle').textContent=inGame?'Вернуться к партии: раунд '+(store.ti4round||1):'Игра уже идёт';$('choicePlay').classList.toggle('primary',inGame);$('choicePrep').classList.toggle('primary',!inGame)}
+
+function renderLesson(){let x=lessons[step],last=step===lessons.length-1;$('lessonProgress').innerHTML=lessons.map((_,i)=>'<span'+(i<=step?' class="done"':'')+'></span>').join('');$('lesson').innerHTML='<p class="count">Шаг '+(step+1)+' из '+lessons.length+'</p><h3>'+x[0]+'</h3>'+x[1]+'<p class="callout"><b>'+x[2]+'</b>'+x[3]+'</p>';$('lessonCount').textContent=last?'Это последний шаг. Дальше выбор фракции.':'Осталось около '+minutes((lessons.length-1-step)*2);$('prev').disabled=step===0;$('next').textContent=last?'Выбрать фракцию':'Дальше'}
+function lessonStep(d){if(step===lessons.length-1&&d>0){$('factions').scrollIntoView();return}step=Math.max(0,Math.min(lessons.length-1,step+d));store.ti4step=step;renderLesson();if($('lesson').getBoundingClientRect().top<0)$('lesson').scrollIntoView()}
+
+function factionRow([f,i]){return '<li class="faction" data-f="'+i+'"><div><b>'+f[0]+'</b><span>'+f[1]+'</span><span class="tip">'+f[2]+'</span><span class="diff">'+[1,2,3].map(n=>'<i'+(n<=levels[f[3]]?' class="on"':'')+'></i>').join('')+'<small>'+f[3]+'</small></span></div><button class="btn" onclick="pick('+i+')"></button></li>'}
+function renderRaces(){let q=$('search').value.trim().toLowerCase(),list=factions.map((f,i)=>[f,i]).filter(([f])=>f.slice(0,4).join(' ').toLowerCase().includes(q)),easy=list.filter(([f])=>f[4]),rest=list.filter(([f])=>!f[4]);$('easyRaces').innerHTML=easy.map(factionRow).join('');$('restRaces').innerHTML=rest.map(factionRow).join('');$('easyTitle').hidden=!easy.length;$('restTitle').hidden=!rest.length;$('racesEmpty').hidden=list.length>0;updatePicked()}
+function pick(i){store.ti4race=factions[i][0];updatePicked();renderGame()}
+function updatePicked(){let r=store.ti4race;document.querySelectorAll('[data-f]').forEach(li=>{let on=factions[li.dataset.f][0]===r,b=li.querySelector('button');li.classList.toggle('picked',on);b.textContent=on?'Выбрано':'Я играю за них';b.setAttribute('aria-pressed',on)});$('picked').textContent=r?'Ты играешь за: '+r+'.':'Для первой партии удобны Сол, Летнев, Джол-Нар или Хакан.'}
+
+function phase(){let p=store.ti4phase||'strategy';return p==='agenda'&&store.ti4mecatol!=='1'?'strategy':p}
+function toggleBar(open){let b=$('barBtn'),on=open??b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',on);$('barPanel').hidden=!on}
+function setPhase(p){store.ti4phase=p;closeTurn();toggleBar(false);renderGame();scrollTo(0,0)}
+function changeRound(d){store.ti4round=Math.max(1,Number(store.ti4round||1)+d);renderGame()}
+function nextRound(){store.ti4round=Number(store.ti4round||1)+1;statusSteps.forEach((_,i)=>delete store['ti4check'+i]);save('ti4cards',[]);save('ti4used',[]);renderStatus();setPhase('strategy')}
+function afterStatus(){store.ti4mecatol==='1'?setPhase('agenda'):nextRound()}
+function setMecatol(on){store.ti4mecatol=on?'1':'0';renderGame()}
+function newGame(){if(!confirm('Начать новую партию? Счёт, раунд и отметки обнулятся.'))return;['ti4round','ti4phase','ti4vp','ti4mecatol','ti4cards','ti4used','ti4wz'].forEach(k=>delete store[k]);statusSteps.forEach((_,i)=>delete store['ti4check'+i]);renderStatus();setPhase('strategy')}
+function initTrack(){$('track').innerHTML=Array.from({length:11},(_,i)=>'<button'+(i===10?' class="goal"':'')+' aria-label="Мой счёт: '+i+'" onclick="setScore('+i+')">'+i+'</button>').join('')}
+function setScore(i){store.ti4vp=Math.max(0,Math.min(10,i));renderGame()}
+function cardName(n){return strategies[n-1][1]}
+function toggleCard(n){let c=load('ti4cards',[]);c=c.includes(n)?c.filter(x=>x!==n):[...c,n].slice(-2).sort((a,b)=>a-b);save('ti4cards',c);save('ti4used',load('ti4used',[]).filter(x=>c.includes(x)));renderGame()}
+function cardRow(s,mine,used,open){return '<li class="card'+(mine?' mine-card':'')+'" style="--c:var(--s'+s[0]+')"><details'+(open?' open':'')+'><summary><span class="init">'+s[0]+'</span><b>'+s[1]+'</b><span class="short">'+(used?'Разыграна':s[4])+'</span>'+(mine&&!open?'<span class="tag">Моя</span>':'')+'</summary><div class="more"><p><b>Ты:</b> '+s[2]+'</p><p><b>Другие:</b> '+s[3]+'</p>'+(open?'':'<button class="btn" onclick="toggleCard('+s[0]+')">'+(mine?'Это не моя':'Беру эту')+'</button>')+'</div></details></li>'}
+function renderGame(){let p=phase(),vp=Number(store.ti4vp||0),cards=load('ti4cards',[]),used=load('ti4used',[]),mec=store.ti4mecatol==='1';
+$('barRound').textContent='Раунд '+(store.ti4round||1);$('barPhase').textContent='Фаза: '+phaseNames[p].toLowerCase();$('barScore').textContent=vp;
+$('barCards').innerHTML=cards.map(n=>'<i class="'+(used.includes(n)?'used':'')+'" style="--c:var(--s'+n+')" title="'+cardName(n)+'">'+n+'</i>').join('');
+$('roundLabel').textContent='Раунд '+(store.ti4round||1);
+$('mineFaction').innerHTML=store.ti4race?'Фракция: '+store.ti4race:'<button class="link" onclick="show(\'prep\',\'factions\')">Выбрать фракцию</button>';
+$('phases').innerHTML=Object.keys(phaseNames).filter(k=>k!=='agenda'||mec).map(k=>'<button aria-pressed="'+(k===p)+'" onclick="setPhase(\''+k+'\')">'+phaseNames[k]+'</button>').join('');
+[...$('track').children].forEach((b,i)=>{b.classList.toggle('on',vp>0&&i<=vp);b.setAttribute('aria-pressed',i===vp)});
+$('trackNote').textContent=vp>=10?'10 очков. Это победа!':'Нажми на число, чтобы отметить счёт. До победы '+plural(10-vp,['очко','очка','очков'])+'.';
+Object.keys(phaseNames).forEach(k=>$('phase-'+k).hidden=k!==p);
+$('strategy').innerHTML=strategies.map(s=>cardRow(s,cards.includes(s[0]),false,false)).join('');
+$('myCardsList').innerHTML=cards.map(n=>cardRow(strategies[n-1],true,used.includes(n),true)).join('');$('myCardsTitle').hidden=!cards.length;
+$('mecatol').checked=mec;$('wake').checked=store.ti4wake==='1';
+$('statusEndHint').textContent=mec?'Когда все шаги пройдены:':'Когда все шаги пройдены, раунд закончен:';
+$('statusNext').textContent=mec?'Перейти к фазе повестки':'Начать следующий раунд';
+let q=$('quickScore');if(q)q.textContent='Счёт: '+vp}
+
+/* turn helper: screens return [header meta, body, footer]; `back` holds visited screen ids */
+let wz=null,back=[],combatRound=1,lastFocus=null;
+function pipeline(now,skipped){return '<div class="pipeline">'+[0,1,2,3,4].map(i=>'<span class="'+(i===now?'now':skipped.includes(i)?'skip':i<now?'done':'')+'"></span>').join('')+'</div>Шаг '+(now+1)+' из 5'}
+function skipped(){return [...(back.includes('combat')||wz==='combat'?[]:[2]),...(back.includes('invasion')||wz==='invasion'?[]:[3])]}
+function title(t){return '<h2 id="sheetTitle" tabindex="-1">'+t+'</h2>'}
+function btn(label,action,primary){return '<button class="btn'+(primary?' primary':'')+'" onclick="'+action+'">'+label+'</button>'}
+function option(id,name,desc){return '<button class="option" onclick="go(\''+id+'\')"><b>'+name+'</b><span>'+desc+'</span></button>'}
+const screens={
+choose:()=>['Твой ход',title('Что делаешь?')+'<div class="options">'+option('t1','Тактическое','Жетон на систему, корабли, бой, высадка, постройка')+option('strategic','Стратегическое','Разыграть свою карту стратегии')+option('component','Компонентное','Эффект с пометкой ACTION')+option('pass','Пас','Больше не ходить в этом раунде')+'</div>',''],
+t1:()=>[pipeline(0,[]),title('Активация')+'<p>Возьми жетон из тактической зоны и положи на систему, куда идёшь. Твоего жетона там быть не должно.</p><p class="check-q">Проверь: корабли, которые хочешь привести, стоят в системах без твоего жетона?</p>',btn('Дальше',"go('t2')",1)],
+t2:()=>[pipeline(1,[]),title('Перемещение')+'<p>Передвинь корабли в активную систему. Каждый проходит не больше своей скорости (MOVE) и не сквозь системы с чужими кораблями.</p><p>Пехоту и истребители везут корабли с вместимостью (CAPACITY). В конце перемещения чужие PDS рядом могут выстрелить по твоим кораблям (SPACE CANNON).</p>',btn('Дальше',"go('q1')",1)],
+q1:()=>[pipeline(2,[]),title('В системе есть чужие корабли?')+'<p>Если да — начинается космический бой. Если нет — переходим к высадке.</p>',btn('Нет',"go('q2')")+btn('Да, бой',"go('combat')",1)],
+combat:()=>[pipeline(2,[]),title('Космический бой: раунд '+combatRound)+'<ol>'+(combatRound===1?'<li>Заградогонь (ANTI-FIGHTER BARRAGE): юниты с этой способностью стреляют по истребителям.</li>':'')+'<li>Объяви отступление, если хочешь: сначала решает защитник, потом нападающий.</li><li>Брось кубики: попадание, если выпало не меньше числа боя (COMBAT).</li><li>Распредели попадания по своим кораблям. SUSTAIN DAMAGE — положи корабль на бок вместо уничтожения.</li><li>Отступление: объявивший уводит корабли в соседнюю систему без чужих кораблей.</li></ol>',btn('Ещё раунд',"combatRound++;wizard('combat')")+btn('Бой закончен',"go('q2')",1)],
+q2:()=>[pipeline(3,skipped()),title('Высаживаешься на планеты?')+'<p>Если нет — сразу к производству.</p>',btn('Нет',"go('prod')")+btn('Да, высадка',"go('invasion')",1)],
+invasion:()=>[pipeline(3,skipped()),title('Вторжение')+'<ol><li>Бомбардировка (BOMBARDMENT) — если у твоих кораблей есть эта способность.</li><li>Высади пехоту с кораблей на планеты.</li><li>PDS на планете могут выстрелить по высадившимся.</li><li>Наземный бой: как космический, пока на планете не останутся войска одной стороны.</li><li>Победил — возьми карту планеты. Она приходит истощённой: заплатить ею можно со следующего раунда.</li></ol>',btn('Дальше',"go('prod')",1)],
+prod:()=>[pipeline(4,skipped()),title('Производство')+'<p>Если в активной системе есть твой космодок, построй юниты. Плати ресурсами. Истребители и пехота — 2 штуки за 1 ресурс.</p><p>Всего юнитов не больше числа PRODUCTION космодока, кораблей — не больше лимита флота.</p>',btn('Ход окончен',"go('done')",1)],
+done:()=>['Готово',title('Ход окончен')+'<p>В свой ход можно заключить по одной сделке с каждым соседом. Дальше ходит следующий игрок.</p>',btn('Закрыть','closeTurn()',1)],
+strategic:()=>{let c=load('ti4cards',[]),u=load('ti4used',[]),left=c.filter(n=>!u.includes(n));if(!c.length)return['Стратегическое',title('Какая у тебя карта?')+'<div class="options">'+strategies.map(s=>'<button class="option" onclick="toggleCard('+s[0]+');wizard(\'strategic\')"><b style="color:var(--s'+s[0]+')">'+s[0]+' '+s[1]+'</b><span>'+s[4]+'</span></button>').join('')+'</div>',''];return['Стратегическое',title('Стратегическое действие')+c.map(n=>{let s=strategies[n-1];return '<p><b style="color:var(--s'+n+')">'+n+' '+s[1]+(u.includes(n)?' — разыграна':'')+'</b></p><p><b>Ты:</b> '+s[2]+'</p><p class="check-q"><b>Другие:</b> '+s[3]+'</p>'}).join('')+'<p class="check-q">Другие игроки по очереди решают, использовать ли вторичную способность.</p>',left.length?left.map(n=>btn('Разыграл '+n+' '+cardName(n),'useCard('+n+')',1)).join(''):btn('Закрыть','closeTurn()',1)]},
+component:()=>['Компонентное',title('Компонентное действие')+'<p>Сыграй один эффект с пометкой ACTION: с карты действия, технологии или листа фракции. Выполни текст полностью.</p>',btn('Готово','closeTurn()',1)],
+pass:()=>{let c=load('ti4cards',[]),u=load('ti4used',[]),left=c.filter(n=>!u.includes(n));if(left.length)return['Пас',title('Пасовать пока нельзя')+'<p>Сначала разыграй карту стратегии: '+left.map(n=>n+' '+cardName(n)).join(', ')+'.</p>',btn('Разыграть карту',"go('strategic')",1)];return['Пас',title('Ты спасовал')+'<p>До конца фазы ты не ходишь, но можешь использовать вторичные способности чужих карт.</p>'+(c.length?'':'<p class="check-q">Шпаргалка не знает твою карту стратегии. Убедись, что разыграл её.</p>'),btn('Готово','closeTurn()',1)]}
+};
+function useCard(n){let u=load('ti4used',[]);if(!u.includes(n))save('ti4used',[...u,n]);renderGame();wizard('strategic')}
+function startTurn(){back=[];combatRound=1;lastFocus=document.activeElement;wizard('choose')}
+function go(id){back.push(wz);wizard(id)}
+function goBack(){wizard(back.pop()||'choose')}
+function wizard(id){wz=id;let [meta,body,foot]=screens[id](),s=$('sheet');s.hidden=false;document.body.classList.add('locked');$('sheetMeta').innerHTML=meta;$('sheetBody').innerHTML=body;$('sheetFoot').innerHTML=foot;$('sheetFoot').hidden=!foot;$('sheetBack').hidden=!back.length;$('sheetBody').scrollTop=0;$('sheetTitle').focus();save('ti4wz',{id,back,cr:combatRound})}
+function closeTurn(){if($('sheet').hidden)return;wz=null;back=[];delete store.ti4wz;$('sheet').hidden=true;document.body.classList.remove('locked');(lastFocus||$('turnBtn')).focus?.()}
+function resumeTurn(){let s=load('ti4wz',null);if(s&&!wz&&phase()==='action'&&screens[s.id]){back=s.back||[];combatRound=s.cr||1;wizard(s.id)}}
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('sheet').hidden)closeTurn()});
+
+function renderStatus(){$('statusChecks').innerHTML=statusSteps.map((s,i)=>'<li><label class="check"><input type="checkbox"'+(store['ti4check'+i]==='1'?' checked':'')+' onchange="store[\'ti4check'+i+'\']=this.checked?\'1\':\'0\'"><span class="node"><span class="n">'+(i+1)+'</span></span><b>'+s[0]+'</b>'+(s[1]?'<span class="desc"><span>'+s[1]+'</span></span>':'')+'</label>'+(i===0?'<div class="quick"><span class="hint" id="quickScore"></span><button class="btn" onclick="setScore(Number(store.ti4vp||0)+1)">+1 очко</button><button class="btn" onclick="setScore(Number(store.ti4vp||0)+2)">+2 очка</button></div>':'')+'</li>').join('')}
+
+/* keeps the phone awake at the table; the browser drops the lock whenever the tab is hidden */
+let wakeLock=null;
+async function setWake(on){store.ti4wake=on?'1':'0';$('wakeMsg').textContent='';if(!on){wakeLock?.release();wakeLock=null;return}try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){store.ti4wake='0';$('wake').checked=false;$('wakeMsg').textContent='Браузер не разрешил держать экран включённым. Включи это в настройках телефона.'}}
+if('wakeLock' in navigator){document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&store.ti4wake==='1')setWake(true)});if(store.ti4wake==='1')setWake(true)}else $('wakeRow').hidden=true;
+
+function renderHelp(){let q=$('helpSearch').value.trim().toLowerCase(),hit=t=>t.toLowerCase().includes(q),n=0;$('faq').innerHTML=faqs.map(([g,items],gi)=>{let f=items.filter(x=>hit(x[0]+' '+x[1]));n+=f.length;return f.length?'<h3 id="g'+gi+'">'+g+'</h3>'+f.map(x=>'<details class="qa"'+(q?' open':'')+'><summary><b>'+x[0]+'</b></summary><p>'+x[1]+'</p></details>').join(''):''}).join('');let g=glossary.filter(x=>hit(x.join(' ')));n+=g.length;$('glossary').innerHTML=g.map(x=>'<div><dt>'+x[0]+'<small>'+x[1]+'</small></dt><dd>'+x[2]+'</dd></div>').join('');$('glossaryTitle').hidden=!g.length;$('helpEmpty').hidden=n>0;$('jump').hidden=!!q}
+$('jump').innerHTML=faqs.map(([g],i)=>'<button onclick="$(\'g'+i+'\').scrollIntoView()">'+g+'</button>').join('')+'<button onclick="$(\'glossaryTitle\').scrollIntoView()">Словарь</button>';
+
+initTrack();renderLesson();renderRaces();renderStatus();renderHelp();renderGame();route();
 addEventListener('popstate',route);
 </script>
 </body>
