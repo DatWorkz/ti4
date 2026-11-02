@@ -29,7 +29,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
-body{margin:0;min-height:100dvh;background:var(--ink);color:var(--text);font:400 16px/1.6 var(--body)}
+body{margin:0;min-height:100dvh;overflow-x:clip;background:var(--ink);color:var(--text);font:400 16px/1.6 var(--body)}
 h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
 h2{font-size:clamp(23px,5vw,30px);margin:28px 0 12px;scroll-margin-top:24px}
 h3{font-size:18px;margin:24px 0 8px;scroll-margin-top:84px}
@@ -129,7 +129,10 @@ footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:v
 .link{border:0;background:none;color:var(--glow);font-weight:600;padding:0;text-decoration:underline;text-underline-offset:3px}
 .phases{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;margin:14px 0;padding:4px;border-radius:12px;background:var(--raise)}
 .phases button{min-height:40px;padding:0 4px;border:0;border-radius:9px;background:none;color:var(--mute);font-size:14px;font-weight:600}
-.phases [aria-pressed=true]{background:var(--glow);color:var(--on-glow)}
+.phases{position:relative}
+.phases button{position:relative;transition:color .2s}
+.phases [aria-pressed=true]{color:var(--on-glow)}
+.pill{position:absolute;top:4px;bottom:4px;left:0;width:0;border-radius:9px;background:var(--glow);transition:transform .28s cubic-bezier(.3,.7,.2,1),width .28s cubic-bezier(.3,.7,.2,1)}
 .track{--w:calc((100% - 20px) / 8.5);display:flex;max-width:440px;padding-bottom:calc(var(--w) * .433);margin:4px 0 8px}
 .track button{flex:none;width:var(--w);aspect-ratio:1.1547;padding:0;border:0;background:var(--raise);color:var(--mute);font:600 clamp(11px,2.6vw,15px)/1 var(--display);clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);transition:background-color .15s,color .15s}
 .track button+button{margin-left:calc(var(--w) * -.25 + 2px)}
@@ -250,6 +253,30 @@ body.locked{overflow:hidden}
 }
 @media (max-width:899px){.rail{display:contents}}
 @media (max-width:380px){.glossary div{grid-template-columns:1fr}}
+/* motion: everything here answers a tap, except the one-time galaxy setup on the home page */
+#start{position:relative}
+#start>:not(.galaxy){position:relative}
+.galaxy{position:absolute;top:-12px;right:calc(-1 * var(--gut));width:min(260px,64vw);overflow:hidden;opacity:.5;pointer-events:none}
+.galaxy svg{display:block;width:125%;height:auto}
+.galaxy polygon{fill:none;stroke:color-mix(in srgb,var(--glow) 40%,var(--line));stroke-width:1.2;transform-box:fill-box;transform-origin:center}
+.galaxy .core{fill:color-mix(in srgb,var(--glow) 22%,transparent);stroke:var(--glow)}
+.galaxy.intro polygon{animation:tile .5s cubic-bezier(.2,.8,.3,1) var(--d) both}
+@keyframes tile{from{opacity:0;transform:scale(.4)}}
+.mini-hex span{display:inline-block}
+.spark{position:fixed;z-index:40;width:12px;height:10px;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);pointer-events:none}
+.pipeline span,.segments span{transform-origin:left}
+.pipeline .now,.segments .now{animation:fill .35s cubic-bezier(.2,.8,.3,1)}
+@keyframes fill{from{transform:scaleX(0)}}
+.die{display:inline-block;width:24px;height:24px;margin-left:8px;vertical-align:-3px;color:var(--glow)}
+.die.roll{animation:roll .5s ease-out}
+@keyframes roll{20%{transform:rotate(-20deg)}45%{transform:rotate(14deg) translateY(-3px)}70%{transform:rotate(-6deg)}}
+.flip{display:inline-block;animation:flip .35s cubic-bezier(.2,.8,.3,1)}
+@keyframes flip{from{opacity:0;transform:rotateX(90deg)}}
+.node{z-index:1}
+.timeline::after{content:"";position:absolute;left:15px;top:20px;width:2px;height:var(--fill,0px);background:var(--glow);transition:height .35s cubic-bezier(.2,.8,.3,1)}
+.check:has(input:checked) .node::after{animation:tick .28s cubic-bezier(.2,.8,.3,1)}
+@keyframes tick{from{transform:rotate(45deg) scale(0)}}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.2s}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -268,6 +295,7 @@ body.locked{overflow:hidden}
 </div>
 <main>
 <section id="start" class="page">
+<div class="galaxy" id="galaxy" aria-hidden="true"></div>
 <h2 class="hero">Первая партия в Twilight Imperium</h2>
 <p class="lead">Правила тебе объяснят за столом. Здесь — то, что поможет не потеряться.</p>
 <div class="choices">
@@ -317,7 +345,7 @@ body.locked{overflow:hidden}
 <div class="round"><button class="btn" onclick="changeRound(-1)" aria-label="Предыдущий раунд">−</button><b id="roundLabel"></b><button class="btn" onclick="changeRound(1)" aria-label="Следующий раунд">+</button></div>
 <div class="mine" id="mineFaction"></div>
 </div>
-<div class="phases" id="phases" role="group" aria-label="Фаза"></div>
+<div class="phases" id="phases" role="group" aria-label="Фаза"><span class="pill" id="pill" aria-hidden="true"></span><button data-phase="strategy" onclick="setPhase('strategy')">Стратегия</button><button data-phase="action" onclick="setPhase('action')">Действия</button><button data-phase="status" onclick="setPhase('status')">Статус</button><button data-phase="agenda" onclick="setPhase('agenda')">Повестка</button></div>
 <div class="track" id="track" role="group" aria-label="Мой счёт"></div>
 <p class="hint" id="trackNote" aria-live="polite"></p>
 </div>
@@ -496,19 +524,23 @@ const store=(()=>{try{localStorage.setItem('ti4test','1');localStorage.removeIte
 const pages=['start','prep','play','help'],aliases={learn:['prep'],race:['prep','factions'],turn:['play'],round:['play'],cards:['play']},levels={'Простая':1,'Средняя':2,'Сложная':3};
 const phaseNames={strategy:'Стратегия',action:'Действия',status:'Статус',agenda:'Повестка'};
 let step=Math.min(Number(store.ti4step||0),lessons.length-1);
-const $=id=>document.getElementById(id);
+const $=id=>document.getElementById(id),calm=matchMedia('(prefers-reduced-motion: reduce)');
+let booted=false;
+function motion(el,frames,ms){if(el&&!calm.matches)return el.animate(frames,{duration:ms,easing:'cubic-bezier(.2,.8,.3,1)'})}
+function slide(el,dir){if(dir)motion(el,[{opacity:0,transform:'translateX('+dir*24+'px)'},{opacity:1,transform:'none'}],260)}
 function load(k,d){try{return JSON.parse(store[k])??d}catch(e){return d}}
 function save(k,v){store[k]=JSON.stringify(v)}
 function plural(n,f){let m=n%10,t=n%100;return n+' '+(m===1&&t!==11?f[0]:m>=2&&m<=4&&(t<12||t>14)?f[1]:f[2])}
 function minutes(n){return plural(n,['минута','минуты','минут'])}
-function show(id,anchor){document.querySelectorAll('.page').forEach(x=>x.hidden=x.id!==id);document.querySelectorAll('[data-tab]').forEach(x=>x.dataset.tab===id?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));if(location.hash.slice(1)!==id)history.pushState(null,'','#'+id);if(id==='start')renderStart();if(id==='play')resumeTurn();anchor?$(anchor).scrollIntoView():scrollTo(0,0)}
+function show(id,anchor){let run=()=>swap(id,anchor);booted&&document.startViewTransition&&!calm.matches?document.startViewTransition(run):run()}
+function swap(id,anchor){document.querySelectorAll('.page').forEach(x=>x.hidden=x.id!==id);document.querySelectorAll('[data-tab]').forEach(x=>x.dataset.tab===id?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));if(location.hash.slice(1)!==id)history.pushState(null,'','#'+id);if(id==='start')renderStart();if(id==='play')resumeTurn();anchor?$(anchor).scrollIntoView():scrollTo(0,0)}
 function route(){let id=location.hash.slice(1),a=aliases[id];if(a){history.replaceState(null,'','#'+a[0]);show(...a)}else show(pages.includes(id)?id:'start')}
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>show(b.dataset.tab));
 
 function renderStart(){let started=Number(store.ti4step||0)>0,inGame=Number(store.ti4round||1)>1||Number(store.ti4vp||0)>0||load('ti4cards',[]).length>0;$('prepTitle').textContent=started?'Продолжить курс: шаг '+(step+1)+' из '+lessons.length:'У меня 15 минут до игры';$('playTitle').textContent=inGame?'Вернуться к партии: раунд '+(store.ti4round||1):'Игра уже идёт';$('choicePlay').classList.toggle('primary',inGame);$('choicePrep').classList.toggle('primary',!inGame)}
 
-function renderLesson(){let x=lessons[step],last=step===lessons.length-1;$('lessonProgress').innerHTML=lessons.map((_,i)=>'<span'+(i<=step?' class="done"':'')+'></span>').join('');$('lesson').innerHTML='<p class="count">Шаг '+(step+1)+' из '+lessons.length+'</p><h3>'+x[0]+'</h3>'+x[1]+'<p class="callout"><b>'+x[2]+'</b>'+x[3]+'</p>';$('lessonCount').textContent=last?'Это последний шаг. Дальше выбор фракции.':'Осталось около '+minutes((lessons.length-1-step)*2);$('prev').disabled=step===0;$('next').textContent=last?'Выбрать фракцию':'Дальше'}
-function lessonStep(d){if(step===lessons.length-1&&d>0){$('factions').scrollIntoView();return}step=Math.max(0,Math.min(lessons.length-1,step+d));store.ti4step=step;renderLesson();if($('lesson').getBoundingClientRect().top<0)$('lesson').scrollIntoView()}
+function renderLesson(){let x=lessons[step],last=step===lessons.length-1;$('lessonProgress').innerHTML=lessons.map((_,i)=>'<span'+(i<step?' class="done"':i===step?' class="done now"':'')+'></span>').join('');$('lesson').innerHTML='<p class="count">Шаг '+(step+1)+' из '+lessons.length+'</p><h3>'+x[0]+'</h3>'+x[1]+'<p class="callout"><b>'+x[2]+'</b>'+x[3]+'</p>';$('lessonCount').textContent=last?'Это последний шаг. Дальше выбор фракции.':'Осталось около '+minutes((lessons.length-1-step)*2);$('prev').disabled=step===0;$('next').textContent=last?'Выбрать фракцию':'Дальше'}
+function lessonStep(d){if(step===lessons.length-1&&d>0){$('factions').scrollIntoView();return}step=Math.max(0,Math.min(lessons.length-1,step+d));store.ti4step=step;renderLesson();slide($('lesson'),d);if($('lesson').getBoundingClientRect().top<0)$('lesson').scrollIntoView()}
 
 function factionRow([f,i]){return '<li class="faction" data-f="'+i+'"><div><b>'+f[0]+'</b><span>'+f[1]+'</span><span class="tip">'+f[2]+'</span><span class="diff">'+[1,2,3].map(n=>'<i'+(n<=levels[f[3]]?' class="on"':'')+'></i>').join('')+'<small>'+f[3]+'</small></span></div><button class="btn" onclick="pick('+i+')"></button><div class="ftips" hidden>'+factionTips(f)+'<button class="btn primary" onclick="show(\'play\')">Открыть шпаргалку</button></div></li>'}
 function factionTips(f){return '<p><b>Главное на листе:</b> '+f[5]+'</p><p><b>Первый раунд:</b> '+f[6]+'</p><p><b>Осторожно:</b> '+f[7]+'</p>'}
@@ -517,8 +549,10 @@ function pick(i){store.ti4race=factions[i][0];updatePicked();renderGame()}
 function updatePicked(){let r=store.ti4race;document.querySelectorAll('[data-f]').forEach(li=>{let on=factions[li.dataset.f][0]===r,b=li.querySelector('button');li.classList.toggle('picked',on);li.querySelector('.ftips').hidden=!on;b.textContent=on?'Выбрано':'Я играю за них';b.setAttribute('aria-pressed',on)});$('picked').textContent=r?'Ты играешь за: '+r+'.':'Для первой партии удобны Сол, Летнев, Джол-Нар или Хакан.'}
 
 function phase(){let p=store.ti4phase||'strategy';return p==='agenda'&&store.ti4mecatol!=='1'?'strategy':p}
-function toggleBar(open){let b=$('barBtn'),on=open??b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',on);$('barPanel').hidden=!on}
-function setPhase(p){store.ti4phase=p;closeTurn();toggleBar(false);renderGame();scrollTo(0,0)}
+function toggleBar(open){let b=$('barBtn'),on=open??b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',on);$('barPanel').hidden=!on;if(on)placePill(true)}
+function placePill(instant){let b=document.querySelector('#phases [aria-pressed=true]'),pill=$('pill');if(!b||!b.offsetWidth)return;if(instant)pill.style.transition='none';pill.style.width=b.offsetWidth+'px';pill.style.transform='translateX('+b.offsetLeft+'px)';if(instant){pill.offsetWidth;pill.style.transition=''}}
+/* when picked from the open panel, let the pill finish its slide before the panel folds away */
+function setPhase(p){let open=$('barBtn').getAttribute('aria-expanded')==='true';store.ti4phase=p;closeTurn();renderGame();slide($('phase-'+p),1);motion($('barPhase'),[{opacity:0,transform:'translateY(60%)'},{opacity:1,transform:'none'}],240);if(open)setTimeout(()=>{toggleBar(false);scrollTo(0,0)},320);else scrollTo(0,0)}
 function changeRound(d){store.ti4round=Math.max(1,Number(store.ti4round||1)+d);renderGame()}
 function nextRound(){store.ti4round=Number(store.ti4round||1)+1;statusSteps.forEach((_,i)=>delete store['ti4check'+i]);save('ti4cards',[]);save('ti4used',[]);renderStatus();setPhase('strategy')}
 function afterStatus(){store.ti4mecatol==='1'?setPhase('agenda'):nextRound()}
@@ -527,15 +561,17 @@ function newGame(){if(!confirm('Начать новую партию? Счёт, 
 function initTrack(){$('track').innerHTML=Array.from({length:11},(_,i)=>'<button'+(i===10?' class="goal"':'')+' aria-label="Мой счёт: '+i+'" onclick="setScore('+i+')">'+i+'</button>').join('')}
 function setScore(i){store.ti4vp=Math.max(0,Math.min(10,i));renderGame()}
 function cardName(n){return strategies[n-1][1]}
-function toggleCard(n){let c=load('ti4cards',[]);c=c.includes(n)?c.filter(x=>x!==n):[...c,n].slice(-2).sort((a,b)=>a-b);save('ti4cards',c);save('ti4used',load('ti4used',[]).filter(x=>c.includes(x)));renderGame()}
-function cardRow(s,mine,used,open){return '<li class="card'+(mine?' mine-card':'')+'" style="--c:var(--s'+s[0]+')"><details'+(open?' open':'')+'><summary><span class="init">'+s[0]+'</span><b>'+s[1]+'</b><span class="short">'+(used?'Разыграна':s[4])+'</span>'+(mine&&!open?'<span class="tag">Моя</span>':'')+'</summary><div class="more"><p><b>Ты:</b> '+s[2]+'</p><p><b>Другие:</b> '+s[3]+'</p>'+(open?'':'<button class="btn" onclick="toggleCard('+s[0]+')">'+(mine?'Это не моя':'Беру эту')+'</button>')+'</div></details></li>'}
+function toggleCard(n){let c=load('ti4cards',[]),added=!c.includes(n);c=added?[...c,n].slice(-2).sort((a,b)=>a-b):c.filter(x=>x!==n);save('ti4cards',c);save('ti4used',load('ti4used',[]).filter(x=>c.includes(x)));renderGame();if(added){motion(document.querySelector('#strategy [data-card="'+n+'"] .init'),[{transform:'scale(1)'},{transform:'scale(1.4)'},{transform:'scale(1)'}],380);motion([...$('barCards').children].find(x=>x.textContent==n),[{opacity:0,transform:'translateY(-12px)'},{opacity:1,transform:'none'}],320)}}
+function cardRow(s,mine,used,open){return '<li class="card'+(mine?' mine-card':'')+'" data-card="'+s[0]+'" style="--c:var(--s'+s[0]+')"><details'+(open?' open':'')+'><summary><span class="init">'+s[0]+'</span><b>'+s[1]+'</b><span class="short">'+(used?'Разыграна':s[4])+'</span>'+(mine&&!open?'<span class="tag">Моя</span>':'')+'</summary><div class="more"><p><b>Ты:</b> '+s[2]+'</p><p><b>Другие:</b> '+s[3]+'</p>'+(open?'':'<button class="btn" onclick="toggleCard('+s[0]+')">'+(mine?'Это не моя':'Беру эту')+'</button>')+'</div></details></li>'}
 function renderGame(){let p=phase(),vp=Number(store.ti4vp||0),cards=load('ti4cards',[]),used=load('ti4used',[]),mec=store.ti4mecatol==='1';
-$('barRound').textContent='Раунд '+(store.ti4round||1);$('barPhase').textContent='Фаза: '+phaseNames[p].toLowerCase();$('barScore').textContent=vp;
+$('barRound').textContent='Раунд '+(store.ti4round||1);$('barPhase').textContent='Фаза: '+phaseNames[p].toLowerCase();$('barScore').innerHTML='<span>'+vp+'</span>';if(lastVp!==null&&lastVp!==vp)motion($('barScore').firstChild,[{opacity:0,transform:'translateY('+(vp>lastVp?70:-70)+'%)'},{opacity:1,transform:'none'}],260);
 $('barCards').innerHTML=cards.map(n=>'<i class="'+(used.includes(n)?'used':'')+'" style="--c:var(--s'+n+')" title="'+cardName(n)+'">'+n+'</i>').join('');
 $('roundLabel').textContent='Раунд '+(store.ti4round||1);
 $('mineFaction').innerHTML=store.ti4race?'Фракция: '+store.ti4race:'<button class="link" onclick="show(\'prep\',\'factions\')">Выбрать фракцию</button>';
-$('phases').innerHTML=Object.keys(phaseNames).filter(k=>k!=='agenda'||mec).map(k=>'<button aria-pressed="'+(k===p)+'" onclick="setPhase(\''+k+'\')">'+phaseNames[k]+'</button>').join('');
-[...$('track').children].forEach((b,i)=>{b.classList.toggle('on',vp>0&&i<=vp);b.setAttribute('aria-pressed',i===vp)});
+document.querySelectorAll('#phases button').forEach(b=>{b.hidden=b.dataset.phase==='agenda'&&!mec;b.setAttribute('aria-pressed',b.dataset.phase===p)});placePill();
+/* hexes light up one by one from the old score to the new one */
+let from=lastVp??vp;[...$('track').children].forEach((b,i)=>{let lit=vp>0&&i<=vp,was=from>0&&i<=from;b.style.transitionDelay=lit!==was?(lit?(i-from)*55:(from-i)*35)+'ms':'0ms';b.classList.toggle('on',lit);b.setAttribute('aria-pressed',i===vp)});
+if(lastVp!==null&&lastVp<10&&vp===10)burst();lastVp=vp;
 $('trackNote').textContent=vp>=10?'10 очков. Это победа!':'Нажми на число, чтобы отметить счёт. До победы '+plural(10-vp,['очко','очка','очков'])+'.';
 Object.keys(phaseNames).forEach(k=>$('phase-'+k).hidden=k!==p);
 $('strategy').innerHTML=strategies.map(s=>cardRow(s,cards.includes(s[0]),false,false)).join('');
@@ -544,7 +580,9 @@ $('mecatol').checked=mec;$('wake').checked=store.ti4wake==='1';
 let fi=factions.find(f=>f[0]===store.ti4race),fb=$('factionBox'),key=store.ti4race+'/'+(store.ti4round||1);fb.hidden=!fi;if(fi&&fb.dataset.key!==key){fb.dataset.key=key;fb.open=Number(store.ti4round||1)===1;$('factionBoxTitle').textContent='Твоя фракция: '+fi[0];$('factionBoxBody').innerHTML=factionTips(fi)}
 $('statusEndHint').textContent=mec?'Когда все шаги пройдены:':'Когда все шаги пройдены, раунд закончен:';
 $('statusNext').textContent=mec?'Перейти к фазе повестки':'Начать следующий раунд';
-let q=$('quickScore');if(q)q.textContent='Счёт: '+vp}
+let q=$('quickScore');if(q)q.textContent='Счёт: '+vp;if(p==='status')statusFill()}
+let lastVp=null;
+function burst(){if(calm.matches)return;let g=$('track').lastElementChild,b=(g.offsetWidth?g:$('barScore')).getBoundingClientRect(),cx=b.left+b.width/2,cy=b.top+b.height/2;for(let i=0;i<16;i++){let s=document.createElement('i'),a=i/16*Math.PI*2,d=56+(i%3)*24;s.className='spark';s.style.cssText='left:'+cx+'px;top:'+cy+'px;background:var(--s'+(i%8+1)+')';document.body.append(s);s.animate([{transform:'translate(-50%,-50%)',opacity:1},{transform:'translate(calc(-50% + '+Math.cos(a)*d+'px),calc(-50% + '+Math.sin(a)*d+'px)) rotate('+i*40+'deg) scale(.3)',opacity:0}],{duration:700+(i%4)*80,easing:'cubic-bezier(.15,.7,.3,1)',fill:'forwards'});setTimeout(()=>s.remove(),1100)}}
 
 /* turn helper: screens return [header meta, body, footer]; `back` holds visited screen ids */
 let wz=null,back=[],combatRound=1,lastFocus=null;
@@ -558,7 +596,7 @@ choose:()=>['Твой ход',title('Что делаешь?')+'<div class="optio
 t1:()=>[pipeline(0,[]),title('Активация')+'<p>Возьми жетон из тактической зоны и положи на систему, куда идёшь. Твоего жетона там быть не должно.</p><p class="check-q">Проверь: корабли, которые хочешь привести, стоят в системах без твоего жетона?</p>',btn('Дальше',"go('t2')",1)],
 t2:()=>[pipeline(1,[]),title('Перемещение')+'<p>Передвинь корабли в активную систему. Каждый проходит не больше своей скорости (MOVE) и не сквозь системы с чужими кораблями.</p><p>Пехоту и истребители везут корабли с вместимостью (CAPACITY). В конце перемещения чужие PDS рядом могут выстрелить по твоим кораблям (SPACE CANNON).</p>',btn('Дальше',"go('q1')",1)],
 q1:()=>[pipeline(2,[]),title('В системе есть чужие корабли?')+'<p>Если да — начинается космический бой. Если нет — переходим к высадке.</p>',btn('Нет',"go('q2')")+btn('Да, бой',"go('combat')",1)],
-combat:()=>[pipeline(2,[]),title('Космический бой: раунд '+combatRound)+'<ol>'+(combatRound===1?'<li>Заградогонь (ANTI-FIGHTER BARRAGE): юниты с этой способностью стреляют по истребителям.</li>':'')+'<li>Объяви отступление, если хочешь: сначала решает защитник, потом нападающий.</li><li>Брось кубики: попадание, если выпало не меньше числа боя (COMBAT).</li><li>Распредели попадания по своим кораблям. SUSTAIN DAMAGE — положи корабль на бок вместо уничтожения.</li><li>Отступление: объявивший уводит корабли в соседнюю систему без чужих кораблей.</li></ol>',btn('Ещё раунд',"combatRound++;wizard('combat')")+btn('Бой закончен',"go('q2')",1)],
+combat:()=>[pipeline(2,[]),title('Космический бой: раунд <span'+(combatRound>1?' class="flip"':'')+'>'+combatRound+'</span><svg class="die'+(combatRound>1?' roll':'')+'" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 21 10 12 22 3 10z M3 10l9 3 9-3M12 13v9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>')+'<ol>'+(combatRound===1?'<li>Заградогонь (ANTI-FIGHTER BARRAGE): юниты с этой способностью стреляют по истребителям.</li>':'')+'<li>Объяви отступление, если хочешь: сначала решает защитник, потом нападающий.</li><li>Брось кубики: попадание, если выпало не меньше числа боя (COMBAT).</li><li>Распредели попадания по своим кораблям. SUSTAIN DAMAGE — положи корабль на бок вместо уничтожения.</li><li>Отступление: объявивший уводит корабли в соседнюю систему без чужих кораблей.</li></ol>',btn('Ещё раунд',"combatRound++;wizard('combat')")+btn('Бой закончен',"go('q2')",1)],
 q2:()=>[pipeline(3,skipped()),title('Высаживаешься на планеты?')+'<p>Если нет — сразу к производству.</p>',btn('Нет',"go('prod')")+btn('Да, высадка',"go('invasion')",1)],
 invasion:()=>[pipeline(3,skipped()),title('Вторжение')+'<ol><li>Бомбардировка (BOMBARDMENT) — если у твоих кораблей есть эта способность.</li><li>Высади пехоту с кораблей на планеты.</li><li>PDS на планете могут выстрелить по высадившимся.</li><li>Наземный бой: как космический, пока на планете не останутся войска одной стороны.</li><li>Победил — возьми карту планеты. Она приходит истощённой: заплатить ею можно со следующего раунда.</li></ol>',btn('Дальше',"go('prod')",1)],
 prod:()=>[pipeline(4,skipped()),title('Производство')+'<p>Если в активной системе есть твой космодок, построй юниты. Плати ресурсами. Истребители и пехота — 2 штуки за 1 ресурс.</p><p>Всего юнитов не больше числа PRODUCTION космодока, кораблей — не больше лимита флота.</p>',btn('Ход окончен',"go('done')",1)],
@@ -569,14 +607,14 @@ pass:()=>{let c=load('ti4cards',[]),u=load('ti4used',[]),left=c.filter(n=>!u.inc
 };
 function useCard(n){let u=load('ti4used',[]);if(!u.includes(n))save('ti4used',[...u,n]);renderGame();wizard('strategic')}
 function startTurn(){back=[];combatRound=1;lastFocus=document.activeElement;wizard('choose')}
-function go(id){back.push(wz);wizard(id)}
-function goBack(){wizard(back.pop()||'choose')}
-function wizard(id){wz=id;let [meta,body,foot]=screens[id](),s=$('sheet');s.hidden=false;document.body.classList.add('locked');$('sheetMeta').innerHTML=meta;$('sheetBody').innerHTML=body;$('sheetFoot').innerHTML=foot;$('sheetFoot').hidden=!foot;$('sheetBack').hidden=!back.length;$('sheetBody').scrollTop=0;$('sheetTitle').focus();save('ti4wz',{id,back,cr:combatRound})}
+function go(id){back.push(wz);wizard(id,1)}
+function goBack(){wizard(back.pop()||'choose',-1)}
+function wizard(id,dir){wz=id;let [meta,body,foot]=screens[id](),s=$('sheet');s.hidden=false;document.body.classList.add('locked');$('sheetMeta').innerHTML=meta;$('sheetBody').innerHTML=body;$('sheetFoot').innerHTML=foot;$('sheetFoot').hidden=!foot;$('sheetBack').hidden=!back.length;$('sheetBody').scrollTop=0;slide($('sheetBody'),dir);$('sheetTitle').focus();save('ti4wz',{id,back,cr:combatRound})}
 function closeTurn(){if($('sheet').hidden)return;wz=null;back=[];delete store.ti4wz;$('sheet').hidden=true;document.body.classList.remove('locked');(lastFocus||$('turnBtn')).focus?.()}
 function resumeTurn(){let s=load('ti4wz',null);if(s&&!wz&&phase()==='action'&&screens[s.id]){back=s.back||[];combatRound=s.cr||1;wizard(s.id)}}
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('sheet').hidden)closeTurn()});
 
-function renderStatus(){$('statusChecks').innerHTML=statusSteps.map((s,i)=>'<li><label class="check"><input type="checkbox"'+(store['ti4check'+i]==='1'?' checked':'')+' onchange="store[\'ti4check'+i+'\']=this.checked?\'1\':\'0\'"><span class="node"><span class="n">'+(i+1)+'</span></span><b>'+s[0]+'</b>'+(s[1]?'<span class="desc"><span>'+s[1]+'</span></span>':'')+'</label>'+(i===0?'<div class="quick"><span class="hint" id="quickScore"></span><button class="btn" onclick="setScore(Number(store.ti4vp||0)+1)">+1 очко</button><button class="btn" onclick="setScore(Number(store.ti4vp||0)+2)">+2 очка</button></div>':'')+'</li>').join('')}
+function renderStatus(){$('statusChecks').innerHTML=statusSteps.map((s,i)=>'<li><label class="check"><input type="checkbox"'+(store['ti4check'+i]==='1'?' checked':'')+' onchange="tickStatus('+i+',this.checked)"><span class="node"><span class="n">'+(i+1)+'</span></span><b>'+s[0]+'</b>'+(s[1]?'<span class="desc"><span>'+s[1]+'</span></span>':'')+'</label>'+(i===0?'<div class="quick"><span class="hint" id="quickScore"></span><button class="btn" onclick="setScore(Number(store.ti4vp||0)+1)">+1 очко</button><button class="btn" onclick="setScore(Number(store.ti4vp||0)+2)">+2 очка</button></div>':'')+'</li>').join('')}
 
 /* keeps the phone awake at the table; the browser drops the lock whenever the tab is hidden */
 let wakeLock=null;
@@ -586,7 +624,14 @@ if('wakeLock' in navigator){document.addEventListener('visibilitychange',()=>{if
 function renderHelp(){let q=$('helpSearch').value.trim().toLowerCase(),hit=t=>t.toLowerCase().includes(q),n=0;$('faq').innerHTML=faqs.map(([g,items],gi)=>{let f=items.filter(x=>hit(x[0]+' '+x[1]));n+=f.length;return f.length?'<h3 id="g'+gi+'">'+g+'</h3>'+f.map(x=>'<details class="qa"'+(q?' open':'')+'><summary><b>'+x[0]+'</b></summary><p>'+x[1]+'</p></details>').join(''):''}).join('');let g=glossary.filter(x=>hit(x.join(' ')));n+=g.length;$('glossary').innerHTML=g.map(x=>'<div><dt>'+x[0]+'<small>'+x[1]+'</small></dt><dd>'+x[2]+'</dd></div>').join('');$('glossaryTitle').hidden=!g.length;$('helpEmpty').hidden=n>0;$('jump').hidden=!!q}
 $('jump').innerHTML=faqs.map(([g],i)=>'<button onclick="$(\'g'+i+'\').scrollIntoView()">'+g+'</button>').join('')+'<button onclick="$(\'glossaryTitle\').scrollIntoView()">Словарь</button>';
 
-initTrack();renderLesson();renderRaces();renderStatus();renderHelp();renderGame();route();
+function tickStatus(i,on){store['ti4check'+i]=on?'1':'0';statusFill();setTimeout(statusFill,280)}
+/* the timeline line fills down to the last ticked step; heights shift while descriptions collapse, hence the second pass */
+function statusFill(){let lis=[...$('statusChecks').children],last=-1;lis.forEach((li,i)=>{if(li.querySelector('input').checked)last=i});$('statusChecks').style.setProperty('--fill',last<0?'0px':lis[last].offsetTop+4+'px')}
+
+/* the home page lays out the galaxy ring by ring from Mecatol Rex, once per browser session */
+function galaxy(){let r=20,h=Math.sqrt(3)*r,out='';for(let q=-3;q<=3;q++)for(let s=-3;s<=3;s++){let t=-q-s,ring=Math.max(Math.abs(q),Math.abs(s),Math.abs(t));if(ring>3)continue;let x=1.5*r*q,y=h*(s+q/2),pts=[0,1,2,3,4,5].map(k=>(x+r*.92*Math.cos(Math.PI/3*k)).toFixed(1)+','+(y+r*.92*Math.sin(Math.PI/3*k)).toFixed(1)).join(' ');out+='<polygon'+(ring?'':' class="core"')+' points="'+pts+'" style="--d:'+(ring*.22+((q*7+s*3)&3)*.04).toFixed(2)+'s"/>'}$('galaxy').innerHTML='<svg viewBox="-125 -125 250 250">'+out+'</svg>';let first=true;try{first=!sessionStorage.ti4intro;sessionStorage.ti4intro='1'}catch(e){}$('galaxy').classList.toggle('intro',first)}
+
+galaxy();initTrack();renderLesson();renderRaces();renderStatus();renderHelp();renderGame();route();booted=true;
 addEventListener('popstate',route);
 </script>
 </body>
